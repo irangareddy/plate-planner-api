@@ -1,0 +1,61 @@
+# https://taskfile.dev
+version: '3'
+
+vars:
+  PACKAGE: src
+  DIST_DIR: dist
+
+tasks:
+
+  default:
+    desc: List all available tasks
+    silent: true
+    cmds:
+      - task --list
+
+  install:
+    desc: Install all dependencies using Poetry
+    cmds:
+      - poetry install
+
+  format:
+    desc: Format code with Ruff
+    cmds:
+      - poetry run ruff format {{.PACKAGE}} tests
+
+  lint:
+    desc: Run Ruff linter
+    cmds:
+      - poetry run ruff check {{.PACKAGE}} tests
+
+  lint:fix:
+    desc: Auto-fix lint issues with Ruff
+    cmds:
+      - poetry run ruff check {{.PACKAGE}} tests --fix-only
+
+  mypy:
+    desc: Run mypy type checks
+    cmds:
+      - poetry run mypy {{.PACKAGE}} tests
+
+  test:
+    desc: Run all tests with pytest
+    cmds:
+      - poetry run pytest tests
+
+  coverage:
+    desc: Run tests with coverage report
+    cmds:
+      - poetry run pytest --cov={{.PACKAGE}} --cov-report=term-missing --cov-report=xml tests
+
+  clean:
+    desc: Remove build artifacts, caches, and pyc files
+    cmds:
+      - rm -rf {{.DIST_DIR}} .mypy_cache .pytest_cache
+      - find . -name "*.pyc" -delete
+
+  build:
+    desc: Build the package (wheel and sdist)
+    deps: [clean]
+    cmds:
+      - poetry build

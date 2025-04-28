@@ -1,0 +1,83 @@
+[tool.poetry]
+name = "plate-planner-api"
+version = "0.1.0"
+description = "A FastAPI-based API for plate planning and nutrition analysis."
+authors = ["Ranga Reddy Nukala <range@coding.com>"]
+readme = "README.md"
+license = "MIT"
+keywords = ["fastapi", "nutrition", "api", "plate planning"]
+homepage = "https://github.com/yourusername/plate-planner-api"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = ">=0.115.12,<0.116.0"
+uvicorn = {extras = ["standard"], version = ">=0.34.1,<0.35.0"}
+pandas = ">=2.2.3,<3.0.0"
+scikit-learn = ">=1.6.1,<2.0.0"
+joblib = ">=1.4.2,<2.0.0"
+pydantic = ">=2.11.3,<3.0.0"
+python-dotenv = ">=1.1.0,<2.0.0"
+databases = ">=0.9.0,<0.10.0"
+httpx = ">=0.28.1,<0.29.0"
+aiosqlite = ">=0.21.0,<0.22.0"
+neo4j = "^5.28.1"
+wordcloud = "^1.9.4"
+tqdm = "^4.67.1"
+matplotlib = "^3.10.1"
+gensim = "^4.3.3"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.3.5,<9.0.0"
+pytest-asyncio = "^0.23.6"
+black = "^24.3.0"
+isort = "^5.13.2"
+mypy = "^1.10.0"
+ruff = "^0.4.4"
+httpx = {extras = ["cli"], version = ">=0.28.1,<0.29.0"}
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+warn_return_any = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = ""
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.format]
+line-ending = "lf"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "ANN204",  # Missing return type annotation for special method `__init__`
+    "COM812",  # missing-trailing-comma
+    "D107",    # Missing docstring in __init__
+    "D203",    # [*] 1 blank line required before class docstring
+    "D211",    # No blank lines allowed before class docstring
+    "D213",    # Multi-line docstring summary should start at the second line
+    "D400",    # First line should end with a period
+    "D415",    # First line should end with a period, question mark, or exclamation point
+    "EM",      # Exception texts
+    "FBT",     # The Boolean Trap
+    "FIX002",  # Allow to add TODO notes in the code
+    "G004",    # Logging statement uses f-string
+    "ISC001",  # single-line-implicit-string-concatenation
+    "PD",      # opinionated linting for pandas code
+    "S101",    # use of assert detected
+    "TRY003",  # Avoid specifying long messages outside the exception class
+    "ARG002"   # Unused arguments in instance method definitions
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/*" = [
+    "PLR2004", # Magic values in comparisons
+    "PT009",   # Use a regular `assert` instead of unittest-style `assertListEqual`
+    "PT027"    # Use pytest.raises instead of unittest-style {assertion}
+]
