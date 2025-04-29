@@ -25,6 +25,14 @@ wordcloud = "^1.9.4"
 tqdm = "^4.67.1"
 matplotlib = "^3.10.1"
 gensim = "^4.3.3"
+# Use 3.8.5 for Python 3.11 and 3.12
+spacy = [
+    { version = "^3.8.5", python = ">=3.11,<3.13" },
+    # Use 4.0.0.dev3+ for Python 3.13+ (requires allowing pre-releases)
+    { version = ">=4.0.0.dev3", python = ">=3.13,<4.0", allow-prereleases = true }
+]
+faiss-cpu = "^1.11.0"
+lightgbm = "^4.6.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=8.3.5,<9.0.0"
