@@ -33,6 +33,9 @@ spacy = [
 ]
 faiss-cpu = "^1.11.0"
 lightgbm = "^4.6.0"
+nltk = "^3.9.1"
+certifi = "^2025.4.26"
+wordninja = "^2.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=8.3.5,<9.0.0"

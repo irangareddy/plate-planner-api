@@ -1,0 +1,83 @@
+.
+├── README.md
+├── Taskfile.yml
+├── poetry.lock
+├── project_structure.txt
+├── pyproject.toml
+├── src
+│   ├── __init__.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   └── app.py
+│   ├── config
+│   │   ├── __init__.py
+│   │   └── config.py
+│   ├── core
+│   │   ├── __init__.py
+│   │   └── server.py
+│   ├── data
+│   │   ├── dataset_understanding.txt
+│   │   ├── db_snapshot.txt
+│   │   ├── ingredients_list.csv
+│   │   ├── models
+│   │   │   ├── action_w2v.model
+│   │   │   ├── faiss_context.index
+│   │   │   └── ingredient_w2v.model
+│   │   ├── processed
+│   │   │   ├── cleaned_ner.csv
+│   │   │   ├── cleaned_ner_actions.csv
+│   │   │   ├── context_metadata.csv
+│   │   │   ├── context_vectors.npy
+│   │   │   ├── ingredients.csv
+│   │   │   ├── recipe_ingredients.csv
+│   │   │   └── recipes.csv
+│   │   └── raw
+│   │       ├── RecipeNLG_dataset.csv
+│   │       ├── recipe_dataset_100k.csv
+│   │       ├── recipe_dataset_10k.csv
+│   │       ├── recipe_dataset_200k.csv
+│   │       └── recipe_dataset_50k.csv
+│   ├── database
+│   │   ├── __init__.py
+│   │   ├── create_ingredients_list.py
+│   │   ├── database_context.py
+│   │   ├── ingredient.py
+│   │   ├── ingredient_relationships.py
+│   │   ├── load.py
+│   │   └── load_ingredient_list_to_neo4j.py
+│   ├── main.py
+│   ├── ml_models
+│   │   ├── recipe_features.npy.npz
+│   │   ├── recipe_labels.npy
+│   │   ├── substitution_features.npy
+│   │   └── substitution_labels.pkl
+│   ├── ml_training
+│   │   ├── 00_split_dataset.py
+│   │   ├── 01_load_clean_parse.py
+│   │   ├── 02_extract_actions.py
+│   │   ├── 03_build_context_vectors.py
+│   │   ├── 04_train_faiss_substitution_model.py
+│   │   ├── 05_build_fastapi_service.py
+│   │   ├── 06_load_into_neo4j.py
+│   │   ├── 07_explore_neo4j_and_save_summary.py
+│   │   ├── 08_build_similar_to_edges.py
+│   │   ├── 09_run_substitution_queries_and_analyze.py
+│   │   ├── __init__.py
+│   │   ├── model_pipeline.py
+│   │   ├── prepare_recipe_training_data.py
+│   │   ├── prepare_substitution_training_data.py
+│   │   ├── read_dataset.py
+│   │   ├── train_recipe_model.py
+│   │   ├── train_substitution_model.py
+│   │   └── word_cloud.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   └── request_response_models.py
+│   └── services
+│       ├── __init__.py
+│       └── neo4j_service.py
+└── tests
+    ├── __init__.py
+    └── test_main.py
+
+15 directories, 66 files

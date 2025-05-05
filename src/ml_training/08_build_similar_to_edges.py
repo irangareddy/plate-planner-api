@@ -6,6 +6,8 @@ from neo4j import GraphDatabase
 from gensim.models import Word2Vec
 from dotenv import load_dotenv
 from tqdm import tqdm
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
+import re
 
 # Load environment variables
 load_dotenv()
@@ -13,20 +15,26 @@ load_dotenv()
 NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
 NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
 NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "12345678")
-
-INGREDIENT_W2V_MODEL_PATH = "/Users/rangareddy/Development/Projects/plate-planner-api/src/data/models/ingredient_w2v.model"
+INGREDIENT_W2V_MODEL_PATH = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/ingredient_w2v.model"
 
 # Neo4j driver
 driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
 
-# Load Ingredient Embedding Model
+# Load Word2Vec model
 ingredient_model = Word2Vec.load(INGREDIENT_W2V_MODEL_PATH)
-
-# How many similar ingredients to link
 TOP_N = 5
 
+# ------------------ Utility ------------------
 
-def create_similar_relationships(tx, source, target, score):
+def is_valid_term(term):
+    return (
+        term.isalpha()
+        and len(term) > 2
+        and term.lower() not in ENGLISH_STOP_WORDS
+        and not re.fullmatch(r'[a-z]', term.lower())
+    )
+
+def create_similar_relationship(tx, source, target, score):
     tx.run("""
         MATCH (a:Ingredient {name: $source})
         MATCH (b:Ingredient {name: $target})
@@ -34,28 +42,27 @@ def create_similar_relationships(tx, source, target, score):
         SET r.score = $score
     """, source=source, target=target, score=score)
 
+# ------------------ Main ------------------
 
 def main():
+    print("📦 Loading ingredient vocabulary...")
+    all_ingredients = list(ingredient_model.wv.index_to_key)
+    valid_ingredients = [ing for ing in all_ingredients if is_valid_term(ing)]
+
+    print(f"Processing {len(valid_ingredients)} cleaned ingredients for SIMILAR_TO edges...")
+
     with driver.session() as session:
-        all_ingredients = list(ingredient_model.wv.index_to_key)
-
-        print(f"Processing {len(all_ingredients)} ingredients for SIMILAR_TO relationships...")
-
-        for ing in tqdm(all_ingredients):
+        for source in tqdm(valid_ingredients):
             try:
-                # Get Top-N similar ingredients
-                similar = ingredient_model.wv.most_similar(ing, topn=TOP_N)
-
-                for target, similarity in similar:
-                    # Write each relationship
-                    session.execute_write(create_similar_relationships, ing, target, float(similarity))
-
+                similar_items = ingredient_model.wv.most_similar(source, topn=TOP_N)
+                for target, similarity in similar_items:
+                    if source == target or not is_valid_term(target):
+                        continue
+                    session.execute_write(create_similar_relationship, source, target, float(similarity))
             except KeyError:
-                # Ingredient missing in model
                 continue
 
-    print("✅ SIMILAR_TO relationships built successfully!")
-
+    print("✅ SIMILAR_TO relationships built and saved to Neo4j.")
 
 if __name__ == "__main__":
     main()

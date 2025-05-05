@@ -5,8 +5,8 @@ import ast
 import os
 
 # Paths
-RAW_DATA_PATH = '/Users/rangareddy/Development/Projects/plate-planner-api/src/data/raw/recipe_dataset.csv'          # <-- adjust this to your file
-CLEANED_DATA_PATH = '/Users/rangareddy/Development/Projects/plate-planner-api/src/data/processed/cleaned_ner.csv'
+RAW_DATA_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/raw/recipe_dataset_200k.csv'          # <-- adjust this to your file
+CLEANED_DATA_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/cleaned_ner.csv'
 
 # Step 1: Load dataset
 print("Loading dataset...")

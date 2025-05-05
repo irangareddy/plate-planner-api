@@ -1,103 +1,121 @@
-# 03_build_context_vectors.py
-
-import pandas as pd
-import ast
 import os
+import ast
+import pandas as pd
 import numpy as np
 from tqdm import tqdm
+from dotenv import load_dotenv
+from neo4j import GraphDatabase
 from gensim.models import Word2Vec
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
+import re
+import time
 
-# ----------------- Paths -----------------
-CLEANED_ACTIONS_DATA_PATH = '/Users/rangareddy/Development/Projects/plate-planner-api/src/data/processed/cleaned_ner_actions.csv'
-INGREDIENT_W2V_MODEL_PATH = '/Users/rangareddy/Development/Projects/plate-planner-api/src/data/models/ingredient_w2v.model'
-ACTION_W2V_MODEL_PATH = '/Users/rangareddy/Development/Projects/plate-planner-api/src/data/models/action_w2v.model'
-CONTEXT_VECTORS_PATH = '/Users/rangareddy/Development/Projects/plate-planner-api/src/data/processed/context_vectors.npy'
-CONTEXT_METADATA_PATH = '/Users/rangareddy/Development/Projects/plate-planner-api/src/data/processed/context_metadata.csv'
+# ------------------ Paths ------------------
+CLEANED_ACTIONS_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/cleaned_ner_actions.csv'
+INGREDIENT_W2V_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/ingredient_w2v.model'
+ACTION_W2V_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/action_w2v.model'
 
-# ----------------- Setup -----------------
-tqdm.pandas()
+# ------------------ Neo4j Setup ------------------
+load_dotenv()
+NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "12345678")
+driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
 
-# ----------------- Step 1: Load dataset -----------------
-print("Loading cleaned dataset with actions...")
-df = pd.read_csv(CLEANED_ACTIONS_DATA_PATH)
+# ------------------ Parameters ------------------
+TOP_K = 5
+SIM_THRESHOLD = 0.85
+ING_WEIGHT = 0.9
+ACT_WEIGHT = 0.1
+BATCH_SIZE = 100  # Number of substitutions to commit at once
 
+# ------------------ Load Data + Models ------------------
+print("📦 Loading dataset and models...")
+df = pd.read_csv(CLEANED_ACTIONS_PATH)
+df['ner_list_cleaned'] = df['ner_list_cleaned'].apply(ast.literal_eval)
+df['actions'] = df['actions'].apply(ast.literal_eval)
 
-# ----------------- Step 2: Parse fields -----------------
-def safe_literal_eval(x):
-    try:
-        return ast.literal_eval(x)
-    except:
-        return []
+ingredient_model = Word2Vec.load(INGREDIENT_W2V_PATH)
+action_model = Word2Vec.load(ACTION_W2V_PATH)
 
+# ------------------ Utility ------------------
+def is_valid_token(token):
+    return (
+        token.isalpha()
+        and len(token) > 2
+        and token.lower() not in ENGLISH_STOP_WORDS
+        and not re.fullmatch(r"[a-z]", token.lower())
+    )
 
-print("Parsing ner_list_cleaned and actions...")
-df['ner_list_cleaned'] = df['ner_list_cleaned'].progress_apply(safe_literal_eval)
-df['actions'] = df['actions'].progress_apply(safe_literal_eval)
+def build_vector(ingredients, actions):
+    ing_vecs = [ingredient_model.wv[w] for w in ingredients if w in ingredient_model.wv]
+    act_vecs = [action_model.wv[w] for w in actions if w in action_model.wv]
 
-# ----------------- Step 3: Train Word2Vec Models -----------------
+    ing_vec = np.mean(ing_vecs, axis=0) if ing_vecs else np.zeros(ingredient_model.vector_size)
+    act_vec = np.mean(act_vecs, axis=0) if act_vecs else np.zeros(action_model.vector_size)
 
-# Prepare training data
-ingredient_sentences = df['ner_list_cleaned'].tolist()
-action_sentences = df['actions'].tolist()
+    return np.concatenate([ing_vec * ING_WEIGHT, act_vec * ACT_WEIGHT])
 
-print("Training Word2Vec on ingredients...")
-ingredient_model = Word2Vec(
-    sentences=ingredient_sentences,
-    vector_size=100,
-    window=5,
-    min_count=2,
-    workers=4,
-    sg=1  # skip-gram
-)
-os.makedirs(os.path.dirname(INGREDIENT_W2V_MODEL_PATH), exist_ok=True)
-ingredient_model.save(INGREDIENT_W2V_MODEL_PATH)
+def write_batch_to_neo4j(tx, records):
+    tx.run("""
+        UNWIND $rows AS row
+        MATCH (a:Ingredient {name: row.source})
+        MATCH (b:Ingredient {name: row.target})
+        MERGE (a)-[r:SUBSTITUTES_WITH]->(b)
+        SET r.score = row.score
+    """, rows=records)
 
-print("Training Word2Vec on actions...")
-action_model = Word2Vec(
-    sentences=action_sentences,
-    vector_size=50,
-    window=3,
-    min_count=1,
-    workers=4,
-    sg=1
-)
-action_model.save(ACTION_W2V_MODEL_PATH)
+# ------------------ Main Logic ------------------
+def main():
+    print("🔍 Generating context-aware substitutions...\n")
+    start = time.time()
+    batch = []
 
+    with driver.session() as session:
+        for _, row in tqdm(df.iterrows(), total=len(df)):
+            ingredients = [w for w in row['ner_list_cleaned'] if is_valid_token(w)]
+            actions = [w for w in row['actions'] if is_valid_token(w)]
 
-# ----------------- Step 4: Build Context Vectors -----------------
+            if len(ingredients) < 2:
+                continue
 
-def build_context_vector(ingredients, actions, ingredient_model, action_model):
-    ing_vecs = [ingredient_model.wv[word] for word in ingredients if word in ingredient_model.wv]
-    act_vecs = [action_model.wv[word] for word in actions if word in action_model.wv]
+            original_vec = build_vector(ingredients, actions)
 
-    if not ing_vecs and not act_vecs:
-        return np.zeros(ingredient_model.vector_size + action_model.vector_size)
+            for ing in ingredients:
+                if ing not in ingredient_model.wv:
+                    continue
 
-    # Average separately, then concatenate
-    if ing_vecs:
-        ing_vec = np.mean(ing_vecs, axis=0)
-    else:
-        ing_vec = np.zeros(ingredient_model.vector_size)
+                try:
+                    similar_candidates = ingredient_model.wv.most_similar(ing, topn=TOP_K)
+                except KeyError:
+                    continue
 
-    if act_vecs:
-        act_vec = np.mean(act_vecs, axis=0)
-    else:
-        act_vec = np.zeros(action_model.vector_size)
+                for candidate, _ in similar_candidates:
+                    if candidate == ing or not is_valid_token(candidate):
+                        continue
 
-    return np.concatenate([ing_vec, act_vec])
+                    substituted = [candidate if x == ing else x for x in ingredients]
+                    sub_vec = build_vector(substituted, actions)
+                    similarity = cosine_similarity([original_vec], [sub_vec])[0][0]
 
+                    if similarity >= SIM_THRESHOLD:
+                        batch.append({
+                            "source": ing,
+                            "target": candidate,
+                            "score": round(similarity, 4)
+                        })
 
-print("Building context vectors...")
-context_vectors = np.vstack(df.progress_apply(
-    lambda row: build_context_vector(row['ner_list_cleaned'], row['actions'], ingredient_model, action_model),
-    axis=1
-))
+                    if len(batch) >= BATCH_SIZE:
+                        session.execute_write(write_batch_to_neo4j, batch)
+                        batch.clear()
 
-print(f"Saving context vectors to {CONTEXT_VECTORS_PATH}...")
-np.save(CONTEXT_VECTORS_PATH, context_vectors)
+        # Final batch
+        if batch:
+            session.execute_write(write_batch_to_neo4j, batch)
 
-# Save metadata (title + link to context vector index)
-print(f"Saving context metadata to {CONTEXT_METADATA_PATH}...")
-df[['title']].to_csv(CONTEXT_METADATA_PATH, index=False)
+    print(f"\n✅ Done! All substitutions written to Neo4j.")
+    print(f"⏱️ Total time taken: {round(time.time() - start, 2)} seconds")
 
-print("✅ Done! Context vectors and metadata saved.")
+if __name__ == "__main__":
+    main()

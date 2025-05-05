@@ -16,9 +16,9 @@ NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "12345678")
 driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
 
 # Data paths
-INGREDIENTS_PATH = "/Users/rangareddy/Development/Projects/plate-planner-api/src/data/processed/ingredients.csv"
-RECIPES_PATH = "/Users/rangareddy/Development/Projects/plate-planner-api/src/data/processed/recipes.csv"
-RELATIONS_PATH = "/Users/rangareddy/Development/Projects/plate-planner-api/src/data/processed/recipe_ingredients.csv"
+INGREDIENTS_PATH = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/ingredients.csv"
+RECIPES_PATH = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/recipes.csv"
+RELATIONS_PATH = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/recipe_ingredients.csv"
 
 # Batch size for transaction optimization
 BATCH_SIZE = 500
