@@ -1,19 +1,19 @@
 # 03_build_context_vectors.py (Enhanced)
-import pandas as pd
 import ast
-import numpy as np
 import os
-from tqdm import tqdm
-from gensim.models import Word2Vec
 
+import numpy as np
+import pandas as pd
 from data.processed.substitution_config import SubstitutionConfig
+from gensim.models import Word2Vec
+from tqdm import tqdm
 
 # ----------------- Paths -----------------
-CLEANED_ACTIONS_PATH = '/data/processed/ingredient_substitution/cleaned_ner_actions.csv'
-INGREDIENT_W2V_MODEL_PATH = '/data/models/ingredient_substitution/ingredient_w2v.model'
-ACTION_W2V_MODEL_PATH = '/data/models/ingredient_substitution/action_w2v.model'
-CONTEXT_VECTOR_PATH = '/data/processed/ingredient_substitution/context_vectors.npy'
-CONTEXT_META_PATH = '/data/processed/ingredient_substitution/context_metadata.csv'
+CLEANED_ACTIONS_PATH = "/data/processed/ingredient_substitution/cleaned_ner_actions.csv"
+INGREDIENT_W2V_MODEL_PATH = "/data/models/ingredient_substitution/ingredient_w2v.model"
+ACTION_W2V_MODEL_PATH = "/data/models/ingredient_substitution/action_w2v.model"
+CONTEXT_VECTOR_PATH = "/data/processed/ingredient_substitution/context_vectors.npy"
+CONTEXT_META_PATH = "/data/processed/ingredient_substitution/context_metadata.csv"
 
 # ----------------- Parameters -----------------
 ING_WEIGHT = SubstitutionConfig.INGREDIENT_WEIGHT
@@ -42,13 +42,13 @@ def main():
 
     print("🔍 Parsing list columns...")
     tqdm.pandas()
-    df['ner_list_cleaned'] = df['ner_list_cleaned'].progress_apply(safe_literal_eval)
-    df['actions'] = df['actions'].progress_apply(safe_literal_eval)
+    df["ner_list_cleaned"] = df["ner_list_cleaned"].progress_apply(safe_literal_eval)
+    df["actions"] = df["actions"].progress_apply(safe_literal_eval)
 
     # --- Step 2: Train Models ---
     print("🧠 Training Ingredient Word2Vec...")
     ingredient_model = Word2Vec(
-        sentences=df['ner_list_cleaned'].tolist(),
+        sentences=df["ner_list_cleaned"].tolist(),
         vector_size=100,
         window=5,
         min_count=2,
@@ -60,7 +60,7 @@ def main():
 
     print("🧠 Training Action Word2Vec...")
     action_model = Word2Vec(
-        sentences=df['actions'].tolist(),
+        sentences=df["actions"].tolist(),
         vector_size=50,
         window=3,
         min_count=1,
@@ -91,7 +91,7 @@ def main():
 
     print("⚙️ Building context vectors...")
     context_vectors = df.progress_apply(
-        lambda row: build_context_vector(row['ner_list_cleaned'], row['actions']),
+        lambda row: build_context_vector(row["ner_list_cleaned"], row["actions"]),
         axis=1
     )
     context_matrix = np.vstack(context_vectors)
@@ -102,7 +102,7 @@ def main():
     np.save(CONTEXT_VECTOR_PATH, context_matrix)
 
     create_directory(CONTEXT_META_PATH)
-    df[['title']].to_csv(CONTEXT_META_PATH, index=False)
+    df[["title"]].to_csv(CONTEXT_META_PATH, index=False)
 
     print("✅ Done! Context vectors + metadata ready for FAISS/similarity search.")
 

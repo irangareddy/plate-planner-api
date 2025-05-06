@@ -19,12 +19,12 @@ def check_node_exists(tx, name):
     return result.single()["count"] > 0
 
 def get_substitutes(tx, ingredient):
-    query = '''
+    query = """
         MATCH (a:Ingredient {name: $ingredient})-[r:SUBSTITUTES_WITH]->(b:Ingredient)
         RETURN b.name AS substitute, r.score AS score
         ORDER BY r.score DESC
         LIMIT 5
-    '''
+    """
     return list(tx.run(query, ingredient=ingredient))
 
 def main():
@@ -34,12 +34,12 @@ def main():
             print(f">>> Testing: {name}")
             node_exists = session.execute_read(check_node_exists, name)
             if not node_exists:
-                print(f"  ❌ Ingredient node NOT found in graph.")
+                print("  ❌ Ingredient node NOT found in graph.")
                 continue
 
             results = session.execute_read(get_substitutes, name)
             if not results:
-                print(f"  ⚠️  No SUBSTITUTES_WITH relationships found.")
+                print("  ⚠️  No SUBSTITUTES_WITH relationships found.")
                 continue
 
             for res in results:

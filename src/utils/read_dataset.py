@@ -1,9 +1,9 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 # 1. Data Loading with Error Handling
 try:
-    df = pd.read_csv('/data/processed/ingredient_substitution/substitution_edges_with_context_cleaned.csv')
+    df = pd.read_csv("/data/processed/ingredient_substitution/substitution_edges_with_context_cleaned.csv")
     print("Dataset loaded successfully!\n")
 
     metrics = []
@@ -24,7 +24,7 @@ try:
 
     # 4. Top Frequent Values for Categorical Columns
     metrics.append("\n=== TOP FREQUENT VALUES (Categorical Columns) ===")
-    for col in df.select_dtypes(include=['object', 'category']):
+    for col in df.select_dtypes(include=["object", "category"]):
         top_vals = df[col].value_counts().head(3)
         metrics.append(f"\nTop in '{col}':\n{top_vals.to_string()}")
 
@@ -33,8 +33,8 @@ try:
     metrics.append(df.describe().to_string())
 
     # 6. Score Column Detailed Analysis
-    if 'score' in df.columns:
-        score = df['score'].dropna()
+    if "score" in df.columns:
+        score = df["score"].dropna()
         metrics.append("\n=== SCORE COLUMN STATS ===")
         metrics.append(f"Min: {score.min()}")
         metrics.append(f"Max: {score.max()}")
@@ -52,15 +52,15 @@ try:
         metrics.append("\nNo 'score' column found in dataset.")
 
     # 7. Context-Aware Substitution Analysis
-    if 'context' in df.columns:
+    if "context" in df.columns:
         metrics.append("\n=== CONTEXT-AWARE SUBSTITUTION STATS ===")
         metrics.append(f"Context values (unique): {df['context'].nunique()}")
-        context_counts = df['context'].value_counts().head(10)
+        context_counts = df["context"].value_counts().head(10)
         metrics.append("\nTop 10 Contexts by Frequency:\n" + context_counts.to_string())
 
         # Score distribution per context
         metrics.append("\nContext-Based Score Breakdown:")
-        grouped = df.groupby('context')['score'].agg(['count', 'mean', 'std', 'min', 'max']).sort_values('count', ascending=False)
+        grouped = df.groupby("context")["score"].agg(["count", "mean", "std", "min", "max"]).sort_values("count", ascending=False)
         metrics.append(grouped.to_string())
 
     # 8. Correlation Matrix (if more than one numeric column)
@@ -70,7 +70,7 @@ try:
         metrics.append(df[num_cols].corr().to_string())
 
     # 9. Save Metrics
-    with open('/data/results/exploration/dataset_understanding.txt', 'w') as f:
+    with open("/data/results/exploration/dataset_understanding.txt", "w") as f:
         f.write("\n".join(metrics))
 
     print("✅ Metrics saved to dataset_understanding.txt")
@@ -78,4 +78,4 @@ try:
 except FileNotFoundError:
     print("❌ Error: File not found. Please check your path.")
 except Exception as e:
-    print(f"❌ Unexpected error: {str(e)}")
+    print(f"❌ Unexpected error: {e!s}")

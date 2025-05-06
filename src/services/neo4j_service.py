@@ -1,10 +1,7 @@
-from evaluation import (
-    get_hybrid_subs,
-    get_direct_subs
-)
-from src.config.config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD
+from evaluation import get_direct_subs, get_hybrid_subs, normalize_ingredient
 from neo4j import GraphDatabase
-from evaluation import normalize_ingredient
+
+from src.config.config import NEO4J_PASSWORD, NEO4J_URI, NEO4J_USER
 
 driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
 

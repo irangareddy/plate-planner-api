@@ -1,11 +1,11 @@
+
 import pandas as pd
-from neo4j import GraphDatabase
 from dotenv import load_dotenv
-import os
+from neo4j import GraphDatabase
 from tqdm import tqdm
 
 # ------------------ Config ------------------
-CSV_PATH = '/data/processed/ingredient_substitution/substitution_edges_with_context_cleaned.csv'  # 🔁 Change this
+CSV_PATH = "/data/processed/ingredient_substitution/substitution_edges_with_context_cleaned.csv"  # 🔁 Change this
 NEO4J_URI = "bolt://localhost:7687"
 NEO4J_USER = "neo4j"
 NEO4J_PASSWORD = "12345678"
@@ -33,11 +33,11 @@ def main():
 
     # Filter low scores and noisy terms
     print("🧹 Filtering poor or noisy substitutions...")
-    df = df[df['score'] >= MIN_SCORE]
+    df = df[df["score"] >= MIN_SCORE]
 
     print(f"✅ {len(df)} edges remaining after filtering")
 
-    rows = df.to_dict(orient='records')
+    rows = df.to_dict(orient="records")
     with driver.session() as session:
         for i in tqdm(range(0, len(rows), BATCH_SIZE), desc="🔁 Uploading"):
             batch = rows[i:i + BATCH_SIZE]

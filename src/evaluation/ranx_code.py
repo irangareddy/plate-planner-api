@@ -1,9 +1,10 @@
+
 import pandas as pd
-from typing import List, Tuple
 from ranx import Qrels, Run, evaluate
 
+
 # Simulated ground-truth and prediction generation based on example queries
-def build_test_queries() -> List[Tuple[List[str], str]]:
+def build_test_queries() -> list[tuple[list[str], str]]:
     return [
         (["butter", "sugar", "flour"], "Scottish Shortbread"),
         (["lettuce", "tomato", "olive oil"], "Fat Free Salad With Fiber"),
@@ -21,7 +22,7 @@ def build_qrels_and_run(test_queries, simulated_results):
         qrels_dict[qid] = {expected_title: 1}
 
         predicted = simulated_results[i]
-        run_dict[qid] = {item['title']: item['combined_score'] for item in predicted}
+        run_dict[qid] = {item["title"]: item["combined_score"] for item in predicted}
 
     return Qrels(qrels_dict), Run(run_dict)
 

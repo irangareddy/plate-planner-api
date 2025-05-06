@@ -1,15 +1,15 @@
-from evaluation import suggest_recipes
-from src.services.neo4j_service import get_hybrid_substitutes
 
+from evaluation import suggest_recipes
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import List
+
+from src.services.neo4j_service import get_hybrid_substitutes
 
 app = FastAPI(title="Plate Planner Backend", version="0.1")
 
 # ✅ Request schema for recipe suggestion
 class RecipeRequest(BaseModel):
-    ingredients: List[str]
+    ingredients: list[str]
     top_n: int = 5
     rerank_weight: float = 0.6
 

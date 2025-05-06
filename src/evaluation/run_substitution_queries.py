@@ -1,9 +1,10 @@
 # 11_run_substitution_queries_and_analyze.py
 
 import os
-from neo4j import GraphDatabase
-from dotenv import load_dotenv
 from datetime import datetime
+
+from dotenv import load_dotenv
+from neo4j import GraphDatabase
 
 # Load environment variables
 load_dotenv()
@@ -68,7 +69,7 @@ def run_query(tx, query):
 def main():
     analysis_points = []
 
-    with driver.session() as session, open(OUTPUT_FILE, 'w') as f:
+    with driver.session() as session, open(OUTPUT_FILE, "w") as f:
         f.write(f"Plate Planner Neo4j Graph Exploration Summary\nGenerated on {datetime.now()}\n\n")
 
         for title, query in queries.items():

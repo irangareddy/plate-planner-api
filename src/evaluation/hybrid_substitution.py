@@ -1,5 +1,6 @@
-import pandas as pd
 import json
+
+import pandas as pd
 import spacy
 from neo4j import GraphDatabase
 

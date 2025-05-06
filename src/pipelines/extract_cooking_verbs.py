@@ -1,15 +1,16 @@
-import pandas as pd
 import ast
-import spacy
 import os
-import nltk
 import ssl
-from tqdm import tqdm
+
+import nltk
+import pandas as pd
+import spacy
 from nltk.corpus import verbnet as vn
+from tqdm import tqdm
 
 # ----------------- Paths -----------------
-CLEANED_DATA_PATH = '/data/processed/ingredient_substitution/cleaned_ner.csv'
-ACTIONS_DATA_PATH = '/data/processed/ingredient_substitution/cleaned_ner_actions.csv'
+CLEANED_DATA_PATH = "/data/processed/ingredient_substitution/cleaned_ner.csv"
+ACTIONS_DATA_PATH = "/data/processed/ingredient_substitution/cleaned_ner_actions.csv"
 
 # ----------------- Setup -----------------
 tqdm.pandas()
@@ -30,15 +31,15 @@ nlp = spacy.load("en_core_web_sm", disable=["parser", "ner", "textcat"])
 def get_valid_culinary_classes():
     """Dynamically find valid VerbNet classes containing known cooking verbs"""
     try:
-        nltk.data.find('corpora/verbnet')
+        nltk.data.find("corpora/verbnet")
     except LookupError:
-        nltk.download('verbnet', quiet=True)
+        nltk.download("verbnet", quiet=True)
 
     # Required NLTK resources
-    nltk.download('wordnet', quiet=True)
+    nltk.download("wordnet", quiet=True)
 
     # Known culinary verbs to look for in VerbNet classes
-    target_verbs = {'bake', 'boil', 'fry', 'grill', 'roast', 'steam', 'stir'}
+    target_verbs = {"bake", "boil", "fry", "grill", "roast", "steam", "stir"}
     valid_classes = set()
 
     for class_id in vn.classids():
@@ -61,14 +62,14 @@ def initialize_culinary_verbs():
         try:
             culinary_verbs.update(map(str.lower, vn.lemmas(cls)))
         except ValueError as e:
-            print(f"⚠️ Skipping invalid class {cls}: {str(e)}")
+            print(f"⚠️ Skipping invalid class {cls}: {e!s}")
 
     # Extended manual culinary verbs
     additional_verbs = {
-        'chop', 'dice', 'mince', 'grate', 'whisk', 'knead', 'season',
-        'marinate', 'peel', 'julienne', 'crush', 'score', 'deglaze',
-        'temper', 'proof', 'ferment', 'emulsify', 'brine', 'sear',
-        'sauté', 'simmer', 'poach', 'braise', 'blanch', 'glaze', 'baste'
+        "chop", "dice", "mince", "grate", "whisk", "knead", "season",
+        "marinate", "peel", "julienne", "crush", "score", "deglaze",
+        "temper", "proof", "ferment", "emulsify", "brine", "sear",
+        "sauté", "simmer", "poach", "braise", "blanch", "glaze", "baste"
     }
 
     culinary_verbs.update(additional_verbs)
@@ -94,11 +95,11 @@ def extract_culinary_actions(directions_series):
     print("\nPreprocessing directions...")
     for directions in tqdm(directions_series, desc="Preprocessing"):
         if isinstance(directions, list):
-            full_text = ' '.join(directions)
+            full_text = " ".join(directions)
         elif isinstance(directions, str):
             try:
                 steps = ast.literal_eval(directions)
-                full_text = ' '.join(steps) if isinstance(steps, list) else directions
+                full_text = " ".join(steps) if isinstance(steps, list) else directions
             except:
                 full_text = directions
         else:
@@ -130,13 +131,13 @@ if __name__ == "__main__":
     df = pd.read_csv(CLEANED_DATA_PATH)
 
     print("Parsing NER data...")
-    df['ner_list_cleaned'] = df['ner_list_cleaned'].progress_apply(safe_literal_eval)
+    df["ner_list_cleaned"] = df["ner_list_cleaned"].progress_apply(safe_literal_eval)
 
     print("\nExtracting culinary actions...")
-    df['actions'] = extract_culinary_actions(df['directions'])
+    df["actions"] = extract_culinary_actions(df["directions"])
 
     os.makedirs(os.path.dirname(ACTIONS_DATA_PATH), exist_ok=True)
-    df[['title', 'ner_list_cleaned', 'directions', 'actions']].to_csv(ACTIONS_DATA_PATH, index=False)
+    df[["title", "ner_list_cleaned", "directions", "actions"]].to_csv(ACTIONS_DATA_PATH, index=False)
 
     print(f"\n✅ Success! Saved culinary actions to {ACTIONS_DATA_PATH}")
-    print("Sample output:", df['actions'].head(3).tolist())
+    print("Sample output:", df["actions"].head(3).tolist())

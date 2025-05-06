@@ -1,14 +1,15 @@
+import os
+
+import faiss
 import numpy as np
 import pandas as pd
-import faiss
-import os
 from sklearn.preprocessing import normalize
 from tqdm import tqdm
 
 # ----------------- Paths -----------------
-CONTEXT_VECTORS_PATH = '/data/processed/ingredient_substitution/context_vectors.npy'
-CONTEXT_METADATA_PATH = '/data/processed/ingredient_substitution/context_metadata.csv'
-FAISS_INDEX_PATH = '/data/models/ingredient_substitution/faiss_context.index'
+CONTEXT_VECTORS_PATH = "/data/processed/ingredient_substitution/context_vectors.npy"
+CONTEXT_METADATA_PATH = "/data/processed/ingredient_substitution/context_metadata.csv"
+FAISS_INDEX_PATH = "/data/models/ingredient_substitution/faiss_context.index"
 
 
 # ----------------- Main Logic -----------------
@@ -22,7 +23,7 @@ def build_faiss_index():
         f"Metadata rows ({len(metadata)}) ≠ vectors ({context_vectors.shape[0]})"
 
     # Normalization
-    context_vectors = normalize(context_vectors, axis=1, norm='l2')
+    context_vectors = normalize(context_vectors, axis=1, norm="l2")
 
     # Index setup
     d = context_vectors.shape[1]
