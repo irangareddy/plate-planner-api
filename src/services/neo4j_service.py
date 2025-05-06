@@ -1,11 +1,11 @@
-from src.ml_training.hybrid_substitution import (
-    get_hybrid_subs,
-    get_direct_subs,
-    get_cooccurrence_subs
-)
-from src.config.config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD
 from neo4j import GraphDatabase
-from src.ml_training.ingredient_normalizer import normalize_ingredient
+
+from src.config.config import NEO4J_PASSWORD, NEO4J_URI, NEO4J_USER
+from src.evaluation.hybrid_substitution import (
+    get_direct_subs,
+    get_hybrid_subs,
+    normalize_ingredient,
+)
 
 driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
 

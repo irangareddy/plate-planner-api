@@ -59,3 +59,9 @@ tasks:
     deps: [clean]
     cmds:
       - poetry build
+
+  serve:
+    desc: Run FastAPI dev server with auto-reload
+    cmds:
+      - poetry run uvicorn src.api.app:app --reload
+

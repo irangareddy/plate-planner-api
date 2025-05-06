@@ -1,7 +1,8 @@
-import pandas as pd
-from neo4j import GraphDatabase
 import os
+
+import pandas as pd
 from dotenv import load_dotenv
+from neo4j import GraphDatabase
 from tqdm import tqdm
 
 # Load environment variables
@@ -27,7 +28,7 @@ def create_ingredients(tx, ingredients):
 
 def create_recipes(tx, recipes):
     for idx, row in recipes.iterrows():
-        tx.run("MERGE (r:Recipe {recipe_id: $rid, title: $title})", rid=int(row['recipe_id']), title=row['title'])
+        tx.run("MERGE (r:Recipe {recipe_id: $rid, title: $title})", rid=int(row["recipe_id"]), title=row["title"])
 
 def create_relations(tx, relations):
     for idx, row in relations.iterrows():
@@ -35,7 +36,7 @@ def create_relations(tx, relations):
             MATCH (r:Recipe {recipe_id: $rid})
             MATCH (i:Ingredient {name: $ing})
             MERGE (r)-[:HAS_INGREDIENT]->(i)
-        """, rid=int(row['recipe_id']), ing=row['ingredient'])
+        """, rid=int(row["recipe_id"]), ing=row["ingredient"])
 
 def batch(iterable, size):
     l = len(iterable)
@@ -51,7 +52,7 @@ def main():
 
             print("Loading ingredients...")
             ingredients_df = pd.read_csv(INGREDIENTS_PATH)
-            ingredients = ingredients_df['ingredient'].dropna().unique().tolist()
+            ingredients = ingredients_df["ingredient"].dropna().unique().tolist()
             num_batches_ingredients = (len(ingredients) + BATCH_SIZE - 1) // BATCH_SIZE
             for batch_ings in tqdm(batch(ingredients, BATCH_SIZE), total=num_batches_ingredients, desc="Ingredients"):
                 session.execute_write(create_ingredients, batch_ings)

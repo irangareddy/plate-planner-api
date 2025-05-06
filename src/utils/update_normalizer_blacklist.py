@@ -1,5 +1,6 @@
-import yaml
 import string
+
+import yaml
 from gensim.models import Word2Vec
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
@@ -13,7 +14,7 @@ print("📦 Loading Word2Vec model...")
 model = Word2Vec.load(W2V_MODEL_PATH)
 
 # --- Load YAML Config ---
-with open(NORMALIZER_CONFIG_PATH, "r") as f:
+with open(NORMALIZER_CONFIG_PATH) as f:
     config = yaml.safe_load(f)
 
 existing_blacklist = set(config.get("blacklist", []))

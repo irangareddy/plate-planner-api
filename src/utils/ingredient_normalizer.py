@@ -1,10 +1,11 @@
 
 import re
+
 import wordninja
 import yaml
 
 # Load YAML configuration for normalization
-with open("/Users/rangareddy/Development/OSS/plate-planner-api/src/ml_training/normalizer_config.yaml", "r") as f:
+with open("/Users/rangareddy/Development/OSS/plate-planner-api/src/ml_training/normalizer_config.yaml") as f:
     config = yaml.safe_load(f)
 
 DESCRIPTORS = set(config.get("descriptors", []))
@@ -15,7 +16,7 @@ BLACKLIST = set(config.get("blacklist", []))
 def normalize_ingredient(text, fallback=True, return_score=False):
     original = text
     text = text.lower()
-    text = re.sub(r'[^a-z\s]', '', text)
+    text = re.sub(r"[^a-z\s]", "", text)
 
     # WordNinja splitting
     split_tokens = []

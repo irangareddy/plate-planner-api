@@ -1,8 +1,8 @@
 
-from neo4j import GraphDatabase
 from datetime import datetime
 
-from ml_training.ingredient_normalizer import normalize_ingredient
+from evaluation import normalize_ingredient
+from neo4j import GraphDatabase
 
 # --- Configuration ---
 NEO4J_URI = "bolt://localhost:7687"
@@ -57,7 +57,7 @@ def main():
             print(f"\n✅ Report saved to: {OUTPUT_FILE}")
 
     except Exception as e:
-        print(f"❌ Error: {str(e)}")
+        print(f"❌ Error: {e!s}")
     finally:
         driver.close()
 

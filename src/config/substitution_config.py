@@ -1,10 +1,10 @@
 # config.py
 
 class SubstitutionConfig:
-    """
-    Configuration constants for ingredient substitution modeling.
+    """Configuration constants for ingredient substitution modeling.
     Access as SubstitutionConfig.INGREDIENT_WEIGHT, etc.
     """
+
     # Vector weights
     INGREDIENT_WEIGHT = 0.85
     ACTION_WEIGHT = 0.15

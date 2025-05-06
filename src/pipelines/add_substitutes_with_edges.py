@@ -1,22 +1,21 @@
-import os
-import pandas as pd
-import numpy as np
 import ast
-import time
-from tqdm import tqdm
-from gensim.models import Word2Vec
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 import re
-from multiprocessing import cpu_count
+import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
-from functools import partial
 from datetime import datetime
+from multiprocessing import cpu_count
+
+import numpy as np
+import pandas as pd
+from gensim.models import Word2Vec
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
+from sklearn.metrics.pairwise import cosine_similarity
+from tqdm import tqdm
 
 # ------------------ Config ------------------
-CLEANED_ACTIONS_PATH = '/data/processed/ingredient_substitution/cleaned_ner_actions.csv'
-INGREDIENT_W2V_PATH = '/data/models/ingredient_substitution/ingredient_w2v.model'
-ACTION_W2V_PATH = '/data/models/ingredient_substitution/action_w2v.model'
+CLEANED_ACTIONS_PATH = "/data/processed/ingredient_substitution/cleaned_ner_actions.csv"
+INGREDIENT_W2V_PATH = "/data/models/ingredient_substitution/ingredient_w2v.model"
+ACTION_W2V_PATH = "/data/models/ingredient_substitution/action_w2v.model"
 EXPORT_PATH = f"/mnt/data/substitution_edges_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
 
 TOP_K = 5
@@ -37,8 +36,8 @@ def build_vector(tokens, vecs, dim):
     return np.mean(vec_list, axis=0) if vec_list else np.zeros(dim)
 
 def process_row(row, ingredient_vecs, action_vecs, ingredient_model, dim_ing, dim_act):
-    ingredients = [w for w in row['ner_list_cleaned'] if is_valid_token(w)]
-    actions = [w for w in row['actions'] if is_valid_token(w)]
+    ingredients = [w for w in row["ner_list_cleaned"] if is_valid_token(w)]
+    actions = [w for w in row["actions"] if is_valid_token(w)]
     if len(ingredients) < 2:
         return []
 
@@ -80,9 +79,9 @@ def main():
     print("📦 Loading and parsing data...")
     df = pd.read_csv(CLEANED_ACTIONS_PATH)
     tqdm.pandas(desc="Parsing ner_list_cleaned")
-    df['ner_list_cleaned'] = df['ner_list_cleaned'].progress_apply(ast.literal_eval)
+    df["ner_list_cleaned"] = df["ner_list_cleaned"].progress_apply(ast.literal_eval)
     tqdm.pandas(desc="Parsing actions")
-    df['actions'] = df['actions'].progress_apply(ast.literal_eval)
+    df["actions"] = df["actions"].progress_apply(ast.literal_eval)
     print(f"⏱️ Loaded and parsed in {round(time.time() - start, 2)} seconds")
 
     # Step 2: Load models and vectorize
@@ -93,8 +92,8 @@ def main():
     dim_ing = ingredient_model.vector_size
     dim_act = action_model.vector_size
 
-    unique_ingredients = {t for lst in df['ner_list_cleaned'] for t in lst if is_valid_token(t)}
-    unique_actions = {t for lst in df['actions'] for t in lst if is_valid_token(t)}
+    unique_ingredients = {t for lst in df["ner_list_cleaned"] for t in lst if is_valid_token(t)}
+    unique_actions = {t for lst in df["actions"] for t in lst if is_valid_token(t)}
 
     ingredient_vecs = {t: ingredient_model.wv[t] for t in tqdm(unique_ingredients, desc="Ingredient Vecs") if t in ingredient_model.wv}
     action_vecs = {t: action_model.wv[t] for t in tqdm(unique_actions, desc="Action Vecs") if t in action_model.wv}

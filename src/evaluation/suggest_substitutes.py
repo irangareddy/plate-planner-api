@@ -1,13 +1,14 @@
-import numpy as np
-from gensim.models import Word2Vec
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 import argparse
 import re
 
+import numpy as np
+from gensim.models import Word2Vec
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
+from sklearn.metrics.pairwise import cosine_similarity
+
 # ----------------- Paths -----------------
-INGREDIENT_W2V_MODEL_PATH = '/data/models/ingredient_substitution/ingredient_w2v.model'
-ACTION_W2V_MODEL_PATH = '/data/models/ingredient_substitution/action_w2v.model'
+INGREDIENT_W2V_MODEL_PATH = "/data/models/ingredient_substitution/ingredient_w2v.model"
+ACTION_W2V_MODEL_PATH = "/data/models/ingredient_substitution/action_w2v.model"
 
 # ----------------- Parameters -----------------
 ING_WEIGHT = 0.8
@@ -26,7 +27,7 @@ def is_valid_ingredient(word):
         word.isalpha() and
         len(word) > 2 and
         word.lower() not in ENGLISH_STOP_WORDS and
-        not re.fullmatch(r'[a-z]', word.lower())
+        not re.fullmatch(r"[a-z]", word.lower())
     )
 
 # ----------------- Context Vector Builder -----------------
@@ -70,7 +71,7 @@ def suggest_substitute(original_ingredient, ingredients, actions, topk=TOP_K):
 # ----------------- CLI -----------------
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ingredient', type=str, required=True, help="Ingredient to substitute")
+    parser.add_argument("--ingredient", type=str, required=True, help="Ingredient to substitute")
     args = parser.parse_args()
 
     # Example test case

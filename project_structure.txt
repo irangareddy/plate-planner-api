@@ -1,11 +1,8 @@
 .
-├── README.md
-├── Taskfile.yml
-├── env_diagnose.sh
-├── env_diagnose.txt
 ├── poetry.lock
 ├── project_structure.txt
 ├── pyproject.toml
+├── README.md
 ├── src
 │    ├── __init__.py
 │    ├── __pycache__
@@ -21,121 +18,116 @@
 │    │    ├── __pycache__
 │    │    │    ├── __init__.cpython-312.pyc
 │    │    │    └── config.cpython-312.pyc
-│    │    └── config.py
-│    ├── core
-│    │    ├── __init__.py
-│    │    └── server.py
+│    │    ├── config.py
+│    │    └── substitution_config.py
 │    ├── data
-│    │    ├── dataset_understanding.txt
-│    │    ├── db_snapshot.txt
-│    │    ├── ingredients_list.csv
 │    │    ├── models
-│    │    │    ├── action_w2v.model
-│    │    │    ├── faiss_context.index
-│    │    │    └── ingredient_w2v.model
+│    │    │    ├── ingredient_substitution
+│    │    │    │    ├── action_w2v.model
+│    │    │    │    ├── faiss_context.index
+│    │    │    │    └── ingredient_w2v.model
+│    │    │    └── recipe_suggestion
+│    │    │        └── recipe_index.faiss
 │    │    ├── processed
-│    │    │    ├── cleaned_ner.csv
-│    │    │    ├── cleaned_ner_actions.csv
-│    │    │    ├── context_metadata.csv
-│    │    │    ├── context_vectors.npy
-│    │    │    ├── eval_queries.csv
+│    │    │    ├── ingredient_substitution
+│    │    │    │    ├── cleaned_ner_actions.csv
+│    │    │    │    ├── cleaned_ner.csv
+│    │    │    │    ├── context_metadata.csv
+│    │    │    │    ├── context_vectors.npy
+│    │    │    │    ├── eval_queries.csv
+│    │    │    │    ├── substitution_edges_cleaned.csv
+│    │    │    │    ├── substitution_edges_with_context_cleaned.csv
+│    │    │    │    ├── substitution_edges_with_context.csv
+│    │    │    │    └── substitution_edges.csv
 │    │    │    ├── ingredients.csv
 │    │    │    ├── recipe_ingredients.csv
-│    │    │    ├── recipes.csv
-│    │    │    ├── substitution_config.py
-│    │    │    ├── substitution_edges.csv
-│    │    │    ├── substitution_edges_cleaned.csv
-│    │    │    ├── substitution_edges_with_context.csv
-│    │    │    └── substitution_edges_with_context_cleaned.csv
+│    │    │    ├── recipe_suggestion
+│    │    │    │    ├── recipe_embeddings.npy
+│    │    │    │    └── recipe_metadata.csv
+│    │    │    └── recipes.csv
 │    │    ├── raw
-│    │    │    ├── RecipeNLG_dataset.csv
 │    │    │    ├── recipe_dataset_100k.csv
 │    │    │    ├── recipe_dataset_10k.csv
 │    │    │    ├── recipe_dataset_200k.csv
-│    │    │    └── recipe_dataset_50k.csv
-│    │    └── results
+│    │    │    ├── recipe_dataset_50k.csv
+│    │    │    └── RecipeNLG_dataset.csv
+│    │    ├── results
+│    │    │    ├── exploration
+│    │    │    │    ├── dataset_understanding.txt
+│    │    │    │    └── graph_exploration_summary.txt
+│    │    │    └── substitution
+│    │    │        ├── hit_at_5k_eval_20250504_230030.txt
+│    │    │        ├── hit_at_5k_eval_20250504_230614.txt
+│    │    │        ├── hit_at_5k_eval_20250504_230920.txt
+│    │    │        ├── hit_at_5k_eval_20250504_231033.txt
+│    │    │        ├── hit_at_5k_eval_20250504_231816.txt
+│    │    │        ├── hit_at_5k_eval_20250505_101510.txt
+│    │    │        ├── ingredients_no_substitutes.txt
+│    │    │        ├── random_substitution_test_results.txt
+│    │    │        ├── substitution_domain_review_with_scores.json
+│    │    │        ├── substitution_domain_review.json
+│    │    │        ├── substitution_eval_report.txt
+│    │    │        ├── substitution_hybrid_results.json
+│    │    │        └── substitution_target_diagnostics.txt
+│    │    └── support
 │    │        ├── dataset_understanding.txt
-│    │        ├── graph_exploration_summary.txt
-│    │        ├── hit_at_5k_eval_20250504_230030.txt
-│    │        ├── hit_at_5k_eval_20250504_230614.txt
-│    │        ├── hit_at_5k_eval_20250504_230920.txt
-│    │        ├── hit_at_5k_eval_20250504_231033.txt
-│    │        ├── hit_at_5k_eval_20250504_231816.txt
-│    │        ├── hit_at_5k_eval_20250505_101510.txt
-│    │        ├── ingredients_no_substitutes.txt
-│    │        ├── random_substitution_test_results.txt
-│    │        ├── substitution_domain_review.json
-│    │        ├── substitution_domain_review_with_scores.json
-│    │        ├── substitution_eval_report.txt
-│    │        ├── substitution_hybrid_results.json
-│    │        └── substitution_target_diagnostics.txt
+│    │        ├── db_snapshot.txt
+│    │        └── ingredients_list.csv
 │    ├── database
 │    │    ├── __init__.py
-│    │    ├── create_ingredients_list.py
-│    │    ├── database_context.py
-│    │    ├── ingredient.py
-│    │    ├── ingredient_relationships.py
-│    │    ├── load.py
-│    │    └── load_ingredient_list_to_neo4j.py
-│    ├── main.py
-│    ├── ml_models
-│    │    ├── recipe_features.npy.npz
-│    │    ├── recipe_labels.npy
-│    │    ├── substitution_features.npy
-│    │    └── substitution_labels.pkl
-│    ├── ml_training
-│    │    ├── 00_split_dataset.py
-│    │    ├── 01_load_clean_parse.py
-│    │    ├── 02_extract_actions.py
-│    │    ├── 03_build_context_vectors.py
-│    │    ├── 04_train_faiss_substitution_model.py
-│    │    ├── 05_build_fastapi_service.py
-│    │    ├── 06_load_into_neo4j.py
-│    │    ├── 07_explore_neo4j_util.py
-│    │    ├── 08_build_similar_to_edges.py
-│    │    ├── 09_add_substitutes_with_edges.py
-│    │    ├── 10_add_substitution_edges_from_csv.py
-│    │    ├── 11_run_substitution_queries_and_analyze.py
+│    │    ├── add_edges_from_csv.py
+│    │    ├── build_similar_to_edges.py
+│    │    ├── explore_util.py
+│    │    └── load_into_neo4j.py
+│    ├── evaluation
 │    │    ├── __init__.py
-│    │    ├── __pycache__
-│    │    │    ├── __init__.cpython-312.pyc
-│    │    │    ├── hybrid_substitution.cpython-312.pyc
-│    │    │    ├── ingredient_normalizer.cpython-312-pytest-8.3.5.pyc
-│    │    │    ├── ingredient_normalizer.cpython-312.pyc
-│    │    │    └── test_search_faiss_by_title.cpython-312-pytest-8.3.5.pyc
-│    │    ├── diagnose_substitution_targets.py
-│    │    ├── filter_substitution_edges_before_neo4j.py
+│    │    ├── coverage_audit.py
+│    │    ├── diagnose_targets.py
+│    │    ├── filter_edges.py
+│    │    ├── graph_diagnostics.py
 │    │    ├── hybrid_substitution.py
-│    │    ├── ingredient_normalizer.py
+│    │    ├── random_subs.py
+│    │    ├── ranx_code.py
+│    │    ├── run_substitution_queries.py
+│    │    └── suggest_substitutes.py
+│    ├── main.py
+│    ├── ml_training
 │    │    ├── ingredients_no_substitutes_normalized.txt
-│    │    ├── model_pipeline.py
-│    │    ├── neo4j_substitution_coverage_audit.py
-│    │    ├── neo4j_substitution_diagnostic.py
-│    │    ├── normalizer_config.yaml
 │    │    ├── prepare_recipe_training_data.py
 │    │    ├── prepare_substitution_training_data.py
-│    │    ├── random_subs.py
-│    │    ├── read_dataset.py
-│    │    ├── search_faiss_by_title.py
-│    │    ├── substitution_target_diagnostics.txt
-│    │    ├── suggest_substitutes_in_context.py
-│    │    ├── train_recipe_model.py
-│    │    ├── train_substitution_model.py
-│    │    └── update_normalizer_blacklist.py
+│    │    └── substitution_target_diagnostics.txt
 │    ├── models
 │    │    ├── __init__.py
 │    │    ├── __pycache__
 │    │    │    ├── __init__.cpython-312.pyc
 │    │    │    └── request_response_models.cpython-312.pyc
 │    │    └── request_response_models.py
-│    └── services
-│        ├── __init__.py
-│        ├── __pycache__
-│        │    ├── __init__.cpython-312.pyc
-│        │    └── neo4j_service.cpython-312.pyc
-│        └── neo4j_service.py
+│    ├── pipelines
+│    │    ├── __init__.py
+│    │    ├── add_substitutes_with_edges.py
+│    │    ├── build_context_vectors.py
+│    │    ├── extract_cooking_verbs.py
+│    │    ├── parse_raw_recipes.py
+│    │    ├── split_dataset.py
+│    │    └── train_faiss_substitution_model.py
+│    ├── services
+│    │    ├── __init__.py
+│    │    ├── __pycache__
+│    │    │    ├── __init__.cpython-312.pyc
+│    │    │    └── neo4j_service.cpython-312.pyc
+│    │    └── neo4j_service.py
+│    └── utils
+│        ├── ingredient_normalizer.py
+│        ├── model_pipeline.py
+│        ├── normalizer_config.yaml
+│        ├── prepare_graph_csvs.py
+│        ├── read_dataset.py
+│        ├── recipesuggestionmodel.py
+│        ├── search_faiss_by_title.py
+│        └── update_normalizer_blacklist.py
+├── Taskfile.yml
 └── tests
     ├── __init__.py
     └── test_main.py
 
-22 directories, 117 files
+29 directories, 102 files

@@ -1,13 +1,13 @@
 # 08_build_similar_to_edges.py
 
 import os
-import numpy as np
-from neo4j import GraphDatabase
-from gensim.models import Word2Vec
-from dotenv import load_dotenv
-from tqdm import tqdm
-from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 import re
+
+from dotenv import load_dotenv
+from gensim.models import Word2Vec
+from neo4j import GraphDatabase
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
+from tqdm import tqdm
 
 # Load environment variables
 load_dotenv()
@@ -31,7 +31,7 @@ def is_valid_term(term):
         term.isalpha()
         and len(term) > 2
         and term.lower() not in ENGLISH_STOP_WORDS
-        and not re.fullmatch(r'[a-z]', term.lower())
+        and not re.fullmatch(r"[a-z]", term.lower())
     )
 
 def create_similar_relationship(tx, source, target, score):

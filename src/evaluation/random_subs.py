@@ -1,7 +1,7 @@
-from neo4j import GraphDatabase
-import random
 import re
 from difflib import get_close_matches
+
+from neo4j import GraphDatabase
 
 # --- Config ---
 NEO4J_URI = "bolt://localhost:7687"
@@ -21,8 +21,8 @@ driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
 
 def normalize(ingredient):
     ing = ingredient.lower()
-    ing = re.sub(r'[^a-z ]', '', ing)
-    ing = re.sub(r'\b(brand|fresh|deli|chunky|layered|lowfat|nonfat|plain|pack)\b', '', ing)
+    ing = re.sub(r"[^a-z ]", "", ing)
+    ing = re.sub(r"\b(brand|fresh|deli|chunky|layered|lowfat|nonfat|plain|pack)\b", "", ing)
     return ing.strip()
 
 def get_random_ingredients(tx, limit):

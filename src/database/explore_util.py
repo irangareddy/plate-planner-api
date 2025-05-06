@@ -1,8 +1,9 @@
 # 07_explore_neo4j_util.py
 
 import os
-from neo4j import GraphDatabase
+
 from dotenv import load_dotenv
+from neo4j import GraphDatabase
 
 # Load environment variables
 load_dotenv()
@@ -89,7 +90,7 @@ def run_query(tx, query):
     return [record.data() for record in result]
 
 def main():
-    with driver.session() as session, open(OUTPUT_FILE, 'w') as f:
+    with driver.session() as session, open(OUTPUT_FILE, "w") as f:
         for section, query in queries.items():
             f.write(f"=== {section} ===\n")
             print(f"Running query: {section}")

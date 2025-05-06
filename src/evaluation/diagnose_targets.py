@@ -11,7 +11,7 @@ df = pd.read_csv(CSV_PATH)
 
 # --- Generate Top Target Report ---
 print(f"📊 Getting top {TOP_N} most frequent targets...")
-top_targets = df['target'].value_counts().head(TOP_N)
+top_targets = df["target"].value_counts().head(TOP_N)
 
 with open(REPORT_PATH, "w") as f:
     f.write("=== TOP TARGETS IN SUBSTITUTION GRAPH ===\n\n")
@@ -19,9 +19,9 @@ with open(REPORT_PATH, "w") as f:
         f.write(f"{i:3}. {term:25} → {count} occurrences\n")
 
     # --- Context Summary ---
-    if 'context' in df.columns:
+    if "context" in df.columns:
         f.write("\n\n=== UNIQUE CONTEXT VALUES ===\n\n")
-        context_counts = df['context'].fillna("None").value_counts()
+        context_counts = df["context"].fillna("None").value_counts()
         for context, count in context_counts.items():
             f.write(f"- {context:15} → {count} edges\n")
     else:
