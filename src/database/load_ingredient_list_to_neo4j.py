@@ -10,7 +10,7 @@ password = "12345678"
 driver = GraphDatabase.driver(uri, auth=(username, password))
 
 # Load ingredients
-ingredients_df = pd.read_csv('../data/ingredients_list.csv')
+ingredients_df = pd.read_csv('../data/support/ingredients_list.csv')
 
 
 def create_ingredient_node(tx, ingredient_name):

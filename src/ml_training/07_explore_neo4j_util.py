@@ -11,7 +11,7 @@ NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
 NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
 NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "12345678")
 
-OUTPUT_FILE = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/results/graph_exploration_summary.txt"
+OUTPUT_FILE = "/data/results/exploration/graph_exploration_summary.txt"
 os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
 
 # Neo4j driver

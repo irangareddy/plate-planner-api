@@ -1,9 +1,9 @@
 import pandas as pd
 
 # --- Config ---
-CSV_PATH = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/substitution_edges_with_context.csv"
+CSV_PATH = "/data/processed/ingredient_substitution/substitution_edges_with_context.csv"
 TOP_N = 100
-REPORT_PATH = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/results/substitution_target_diagnostics.txt"
+REPORT_PATH = "/data/results/substitution/substitution_target_diagnostics.txt"
 
 # --- Load CSV ---
 print("📦 Loading substitution CSV...")

@@ -7,7 +7,7 @@ import wordninja
 
 # --- Paths ---
 RAW_DATA_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/raw/recipe_dataset_200k.csv'
-CLEANED_DATA_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/cleaned_ner.csv'
+CLEANED_DATA_PATH = '/data/processed/ingredient_substitution/cleaned_ner.csv'
 NORMALIZER_YAML_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/ml_training/normalizer_config.yaml'  # <-- Adjust if needed
 
 # --- Load YAML config ---

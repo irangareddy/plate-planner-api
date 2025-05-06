@@ -6,9 +6,9 @@ from sklearn.preprocessing import normalize
 from tqdm import tqdm
 
 # ----------------- Paths -----------------
-CONTEXT_VECTORS_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/context_vectors.npy'
-CONTEXT_METADATA_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/context_metadata.csv'
-FAISS_INDEX_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/faiss_context.index'
+CONTEXT_VECTORS_PATH = '/data/processed/ingredient_substitution/context_vectors.npy'
+CONTEXT_METADATA_PATH = '/data/processed/ingredient_substitution/context_metadata.csv'
+FAISS_INDEX_PATH = '/data/models/ingredient_substitution/faiss_context.index'
 
 
 # ----------------- Main Logic -----------------

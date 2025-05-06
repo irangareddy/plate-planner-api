@@ -9,7 +9,7 @@ NEO4J_USER = "neo4j"
 NEO4J_PASSWORD = "12345678"
 NUM_INGREDIENTS = 10
 SCORE_THRESHOLD = 0.85  # Optional filter
-OUTPUT_FILE = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/results/random_substitution_test_results.txt"
+OUTPUT_FILE = "/data/results/substitution/random_substitution_test_results.txt"
 
 # Optional: fallback to fuzzy match on failed lookup
 ENABLE_FUZZY_MATCH = True

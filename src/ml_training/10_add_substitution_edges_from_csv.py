@@ -5,7 +5,7 @@ import os
 from tqdm import tqdm
 
 # ------------------ Config ------------------
-CSV_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/substitution_edges_with_context_cleaned.csv'  # 🔁 Change this
+CSV_PATH = '/data/processed/ingredient_substitution/substitution_edges_with_context_cleaned.csv'  # 🔁 Change this
 NEO4J_URI = "bolt://localhost:7687"
 NEO4J_USER = "neo4j"
 NEO4J_PASSWORD = "12345678"

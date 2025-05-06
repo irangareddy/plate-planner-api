@@ -9,11 +9,11 @@ from gensim.models import Word2Vec
 from data.processed.substitution_config import SubstitutionConfig
 
 # ----------------- Paths -----------------
-CLEANED_ACTIONS_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/cleaned_ner_actions.csv'
-INGREDIENT_W2V_MODEL_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/ingredient_w2v.model'
-ACTION_W2V_MODEL_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/action_w2v.model'
-CONTEXT_VECTOR_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/context_vectors.npy'
-CONTEXT_META_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/context_metadata.csv'
+CLEANED_ACTIONS_PATH = '/data/processed/ingredient_substitution/cleaned_ner_actions.csv'
+INGREDIENT_W2V_MODEL_PATH = '/data/models/ingredient_substitution/ingredient_w2v.model'
+ACTION_W2V_MODEL_PATH = '/data/models/ingredient_substitution/action_w2v.model'
+CONTEXT_VECTOR_PATH = '/data/processed/ingredient_substitution/context_vectors.npy'
+CONTEXT_META_PATH = '/data/processed/ingredient_substitution/context_metadata.csv'
 
 # ----------------- Parameters -----------------
 ING_WEIGHT = SubstitutionConfig.INGREDIENT_WEIGHT

@@ -4,7 +4,7 @@ from gensim.models import Word2Vec
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 # --- Config ---
-W2V_MODEL_PATH = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/ingredient_w2v.model"
+W2V_MODEL_PATH = "/data/models/ingredient_substitution/ingredient_w2v.model"
 NORMALIZER_CONFIG_PATH = "/Users/rangareddy/Development/OSS/plate-planner-api/src/ml_training/normalizer_config.yaml"
 TOP_K = 1000  # How many top tokens to consider
 

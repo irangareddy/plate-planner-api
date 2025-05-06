@@ -19,7 +19,7 @@ queries = {
 }
 
 # Save the results into a file
-with driver.session() as session, open("../data/db_snapshot.txt", "w", encoding="utf-8") as file:
+with driver.session() as session, open("../data/support/db_snapshot.txt", "w", encoding="utf-8") as file:
     for title, query in queries.items():
         file.write(f"\n=== {title} ===\n")
         result = session.run(query)

@@ -8,8 +8,8 @@ from tqdm import tqdm
 from nltk.corpus import verbnet as vn
 
 # ----------------- Paths -----------------
-CLEANED_DATA_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/cleaned_ner.csv'
-ACTIONS_DATA_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/cleaned_ner_actions.csv'
+CLEANED_DATA_PATH = '/data/processed/ingredient_substitution/cleaned_ner.csv'
+ACTIONS_DATA_PATH = '/data/processed/ingredient_substitution/cleaned_ner_actions.csv'
 
 # ----------------- Setup -----------------
 tqdm.pandas()
