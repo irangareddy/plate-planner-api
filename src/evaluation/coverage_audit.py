@@ -2,7 +2,7 @@
 from neo4j import GraphDatabase
 from datetime import datetime
 
-from ml_training.ingredient_normalizer import normalize_ingredient
+from evaluation import normalize_ingredient
 
 # --- Configuration ---
 NEO4J_URI = "bolt://localhost:7687"

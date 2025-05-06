@@ -1,8 +1,5 @@
-from fastapi import FastAPI, Query
-
-from src.ml_training.recipesuggestionmodel import suggest_recipes
+from evaluation import suggest_recipes
 from src.services.neo4j_service import get_hybrid_substitutes
-from src.models.request_response_models import SubstituteRequest, PantryRequest
 
 from fastapi import FastAPI
 from pydantic import BaseModel
