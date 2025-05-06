@@ -3,7 +3,7 @@ import pandas as pd
 
 # 1. Data Loading with Error Handling
 try:
-    df = pd.read_csv("/data/processed/ingredient_substitution/substitution_edges_with_context_cleaned.csv")
+    df = pd.read_csv("/app/src/data/processed/ingredient_substitution/substitution_edges_with_context_cleaned.csv")
     print("Dataset loaded successfully!\n")
 
     metrics = []
@@ -70,7 +70,7 @@ try:
         metrics.append(df[num_cols].corr().to_string())
 
     # 9. Save Metrics
-    with open("/data/results/exploration/dataset_understanding.txt", "w") as f:
+    with open("/app/src/data/results/exploration/dataset_understanding.txt", "w") as f:
         f.write("\n".join(metrics))
 
     print("✅ Metrics saved to dataset_understanding.txt")

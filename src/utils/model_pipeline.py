@@ -139,7 +139,7 @@ def run_pipeline(
 # ---------------------
 if __name__ == "__main__":
     run_pipeline(
-        recipe_filepath="/src/data/raw/RecipeNLG_dataset.csv",
+        recipe_filepath="/data/raw/RecipeNLG_dataset.csv",
         neo4j_uri="bolt://localhost:7687",
         neo4j_user="neo4j",
         neo4j_password="12345678"

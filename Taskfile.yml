@@ -61,7 +61,20 @@ tasks:
       - poetry build
 
   serve:
-    desc: Run FastAPI dev server with auto-reload
+    desc: Start FastAPI app
     cmds:
-      - poetry run uvicorn src.api.app:app --reload
+      - poetry run uvicorn src.api.app:app --reload --host 0.0.0.0 --port 8000
+
+  wait:neo4j:
+    desc: Wait for Neo4j to be ready
+    cmds:
+      - until nc -z neo4j 7687; do echo "Waiting for Neo4j..."; sleep 2; done
+
+  neo4j:bootstrap:
+    desc: Full graph setup nodes, edges, similarity
+    cmds:
+      - poetry run python -m src.database.bootstrap_graph
+
+
+
 

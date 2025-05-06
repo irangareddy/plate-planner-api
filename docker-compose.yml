@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  neo4j:
+    image: neo4j:5.13
+    container_name: neo4j
+    ports:
+      - "7474:7474"  # Neo4j browser
+      - "7687:7687"  # Bolt protocol
+    environment:
+      - NEO4J_AUTH=neo4j/12345678
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    networks:
+      - plateplanner-net
+
+  api:
+    build: .
+    container_name: plate-planner-api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - neo4j
+    environment:
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=12345678
+    volumes:
+      - .:/app                       # Optional: hot-reload source
+      - ./src/data:/app/src/data     # 🔥 Required: mount entire data module
+    networks:
+      - plateplanner-net
+
+volumes:
+  neo4j_data:
+  neo4j_logs:
+
+networks:
+  plateplanner-net:

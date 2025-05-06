@@ -1,8 +1,8 @@
 import pandas as pd
 
 # --- Config ---
-CSV_IN = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/substitution_edges_with_context.csv"
-CSV_OUT = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/substitution_edges_with_context_cleaned.csv"
+CSV_IN = "app/src/data/processed/substitution_edges_with_context.csv"
+CSV_OUT = "app/src/data/processed/substitution_edges_with_context_cleaned.csv"
 
 BAD_TARGETS = {
     "level", "equal", "read", "just", "combination", "directions",

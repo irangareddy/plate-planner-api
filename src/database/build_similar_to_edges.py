@@ -1,21 +1,16 @@
 # 08_build_similar_to_edges.py
 
-import os
 import re
 
-from dotenv import load_dotenv
+from config.config import NEO4J_PASSWORD, NEO4J_URI, NEO4J_USER
+from config.paths import DataPaths
 from gensim.models import Word2Vec
 from neo4j import GraphDatabase
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 from tqdm import tqdm
 
-# Load environment variables
-load_dotenv()
-
-NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
-NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
-NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "12345678")
-INGREDIENT_W2V_MODEL_PATH = "/data/models/ingredient_substitution/ingredient_w2v.model"
+paths = DataPaths()
+INGREDIENT_W2V_MODEL_PATH = str(paths.ingredient_w2v)
 
 # Neo4j driver
 driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
