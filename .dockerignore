@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.mypy_cache/
+.pytest_cache/
+poetry.lock
+*.sqlite3
+.env
+.env.*
+tests/
+dist/
