@@ -1,9 +1,9 @@
 
-from evaluation import suggest_recipes
 from fastapi import FastAPI
 from pydantic import BaseModel
 
 from src.services.neo4j_service import get_hybrid_substitutes
+from src.utils.recipesuggestionmodel import suggest_recipes
 
 app = FastAPI(title="Plate Planner Backend", version="0.1")
 
