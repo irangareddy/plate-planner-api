@@ -113,3 +113,7 @@ def run_eval(input_csv, output_json, use_hybrid=False):
         json.dump(results, f, indent=2)
 
     print(f"✅ Substitution results saved to: {output_json}")
+
+
+if __name__ == "__main__":
+    run_eval("/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/ingredient_substitution/eval_queries.csv", "substitution_eval_results.json", use_hybrid=False)

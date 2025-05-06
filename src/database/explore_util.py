@@ -26,7 +26,14 @@ queries = {
 
     "Sample Recipe-Ingredient Relationships": """
         MATCH (r:Recipe)-[:HAS_INGREDIENT]->(i:Ingredient)
-        RETURN r.title, i.name
+        RETURN r.recipe_id, r.title, i.name
+        LIMIT 10
+    """,
+
+    "Sample Recipe Metadata": """
+        MATCH (r:Recipe)
+        WHERE r.directions IS NOT NULL AND r.link IS NOT NULL AND r.source IS NOT NULL
+        RETURN r.recipe_id, r.title, r.source, left(r.directions, 100) AS short_directions, r.link
         LIMIT 10
     """,
 

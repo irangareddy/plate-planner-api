@@ -1,0 +1,683 @@
+[
+  {
+    "ingredient": "butter",
+    "context": "bake",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "pan",
+        "score": 0.991699993610382,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "crepes",
+        "score": 0.991599977016449,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "margarine",
+        "score": 0.9886999726295472,
+        "context": "cook",
+        "source": "direct"
+      },
+      {
+        "name": "oleo",
+        "score": 0.9733999967575072,
+        "context": "cook",
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "eggs",
+    "context": "general",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "flour",
+        "score": 0.9904000163078308,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "eggs",
+        "score": 0.9688000082969666,
+        "context": "stir",
+        "source": "direct"
+      },
+      {
+        "name": "batter",
+        "score": 0.9550999999046326,
+        "context": "stir",
+        "source": "direct"
+      },
+      {
+        "name": "puree",
+        "score": 0.9534000158309937,
+        "context": "stir",
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "milk",
+    "context": "boil",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "cream",
+        "score": 0.9911999702453612,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "cornflakes",
+        "score": 0.9904000163078308,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "buttermilk",
+        "score": 0.988099992275238,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "carnation",
+        "score": 0.978600025177002,
+        "context": "heat",
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "sugar",
+    "context": "bake",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "equal",
+        "score": 0.9941999912261964,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "packets",
+        "score": 0.9940999746322632,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "fructose",
+        "score": 0.9937000274658204,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "sweetener",
+        "score": 0.9933000206947328,
+        "context": null,
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "chicken",
+    "context": "grill",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "skinless",
+        "score": 0.9937000274658204,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "consomme",
+        "score": 0.9915000200271606,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "fryer",
+        "score": 0.9908999800682068,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "chickens",
+        "score": 0.9625,
+        "context": "general",
+        "source": "direct"
+      },
+      {
+        "name": "turkey",
+        "score": 0.9557,
+        "context": "general",
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "tomato",
+    "context": "salad",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "tomatoes",
+        "score": 0.9972000122070312,
+        "context": "fry",
+        "source": "direct"
+      },
+      {
+        "name": "roma",
+        "score": 0.986299991607666,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "blend",
+        "score": 0.9854000210762024,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "burger",
+        "score": 0.9853000044822692,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "tomatos",
+        "score": 0.9843999743461608,
+        "context": null,
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "salt",
+    "context": "cook",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "breadcrumb",
+        "score": 0.9926000237464904,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "ground",
+        "score": 0.9919000267982484,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "caraway",
+        "score": 0.991100013256073,
+        "context": null,
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "onion",
+    "context": "fry",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "seasoning",
+        "score": 0.9979000091552734,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "chachere",
+        "score": 0.9975000023841858,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "bouillon",
+        "score": 0.9975000023841858,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "campbell",
+        "score": 0.9973999857902528,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "onions",
+        "score": 0.9925000071525574,
+        "context": "heat",
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "flour",
+    "context": "bake",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "sorghum",
+        "score": 0.991699993610382,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "wheaties",
+        "score": 0.991599977016449,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "nutmeats",
+        "score": 0.9904000163078308,
+        "context": null,
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "cheese",
+    "context": "melt",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "cheddar",
+        "score": 0.9593999981880188,
+        "context": "cut",
+        "source": "direct"
+      },
+      {
+        "name": "swiss",
+        "score": 0.9593999981880188,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "mexicorn",
+        "score": 0.9588000178337096,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "bologna",
+        "score": 0.9580000042915344,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "velveeta",
+        "score": 0.9577999711036682,
+        "context": null,
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "yogurt",
+    "context": "marinate",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "yoghurt",
+        "score": 0.9973000288009644,
+        "context": "simmer",
+        "source": "direct"
+      },
+      {
+        "name": "grape",
+        "score": 0.9929999709129332,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "pepitas",
+        "score": 0.9926000237464904,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "canola",
+        "score": 0.9922999739646912,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "tilapia",
+        "score": 0.9919000267982484,
+        "context": null,
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "honey",
+    "context": "bake",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "nectar",
+        "score": 0.9936000108718872,
+        "context": "cut",
+        "source": "direct"
+      },
+      {
+        "name": "pepitas",
+        "score": 0.9848999977111816,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "soybeans",
+        "score": 0.9839000105857848,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "craisins",
+        "score": 0.9828000068664552,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "tamari",
+        "score": 0.98089998960495,
+        "context": null,
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "beef",
+    "context": "stew",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "sirloin",
+        "score": 0.9914000034332277,
+        "context": "simmer",
+        "source": "direct"
+      },
+      {
+        "name": "chuck",
+        "score": 0.9914000034332277,
+        "context": "simmer",
+        "source": "direct"
+      },
+      {
+        "name": "steak",
+        "score": 0.9901999831199646,
+        "context": "simmer",
+        "source": "direct"
+      },
+      {
+        "name": "meat",
+        "score": 0.9704999923706056,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "kielbasa",
+        "score": 0.9690999984741212,
+        "context": null,
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "garlic",
+    "context": "roast",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "aubergine",
+        "score": 0.9980999827384948,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "paste",
+        "score": 0.9980999827384948,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "cremini",
+        "score": 0.9980000257492064,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "monkfish",
+        "score": 0.9980000257492064,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "tomatos",
+        "score": 0.9980000257492064,
+        "context": null,
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "rice",
+    "context": "steam",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "vermicelli",
+        "score": 0.9550999999046326,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "soup",
+        "score": 0.941100001335144,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "bouillon",
+        "score": 0.9398999810218812,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "chachere",
+        "score": 0.9398000240325928,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "noodles",
+        "score": 0.9319999814033508,
+        "context": null,
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "lemon",
+    "context": "salad",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "juice",
+        "score": 0.992799997329712,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "grape",
+        "score": 0.9926999807357788,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "skin",
+        "score": 0.9925000071525574,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "sumac",
+        "score": 0.9923999905586244,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "lemons",
+        "score": 0.9902999997138976,
+        "context": "heat",
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "soy sauce",
+    "context": "stir-fry",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": []
+  },
+  {
+    "ingredient": "potato",
+    "context": "boil",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "dumplings",
+        "score": 0.987600028514862,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "potatoes",
+        "score": 0.987500011920929,
+        "context": "stir",
+        "source": "direct"
+      },
+      {
+        "name": "parsnip",
+        "score": 0.9872999787330629,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "swede",
+        "score": 0.9869999885559082,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "leek",
+        "score": 0.9866999983787536,
+        "context": "stir",
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "spinach",
+    "context": "saute",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "sourdough",
+        "score": 0.9908999800682068,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "farfalle",
+        "score": 0.9905999898910522,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "tyson",
+        "score": 0.9904999732971193,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "swiss",
+        "score": 0.9901999831199646,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "muenster",
+        "score": 0.9901999831199646,
+        "context": null,
+        "source": "direct"
+      }
+    ]
+  },
+  {
+    "ingredient": "cream",
+    "context": "soup",
+    "hybrid": false,
+    "matched": false,
+    "substitutes": [
+      {
+        "name": "carnation",
+        "score": 0.989799976348877,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "crepes",
+        "score": 0.9890999794006348,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "containers",
+        "score": 0.9879999756813048,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "milk",
+        "score": 0.9869999885559082,
+        "context": null,
+        "source": "direct"
+      },
+      {
+        "name": "ganache",
+        "score": 0.9840999841690063,
+        "context": null,
+        "source": "direct"
+      }
+    ]
+  }
+]

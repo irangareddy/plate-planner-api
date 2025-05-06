@@ -1,0 +1,84 @@
+=== Basic Info ===
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 223114 entries, 0 to 223113
+Data columns (total 7 columns):
+ #   Column       Non-Null Count   Dtype 
+---  ------       --------------   ----- 
+ 0   Unnamed: 0   223114 non-null  int64 
+ 1   title        223114 non-null  object
+ 2   ingredients  223114 non-null  object
+ 3   directions   223114 non-null  object
+ 4   link         223114 non-null  object
+ 5   source       223114 non-null  object
+ 6   NER          223114 non-null  object
+dtypes: int64(1), object(6)
+memory usage: 11.9+ MB
+
+=== Missing Values per Column ===
+Unnamed: 0     0
+title          0
+ingredients    0
+directions     0
+link           0
+source         0
+NER            0
+
+=== Unique Value Counts per Column ===
+
+--- Unnamed: 0 ---
+Unique count: 223114
+Sample values: [2015528 1608734  778500 1334975  116562]
+
+--- title ---
+Unique count: 164954
+Sample values: ['Marinated Flank Steak Recipe' 'French Chicken Stew' 'Glazed Carrots'
+ 'Moms Pie Dough ' 'Pretzel Salad Or Dessert']
+
+--- ingredients ---
+Unique count: 223038
+Sample values: ['["1 1/2 pound flank steak", "1/2 c. finely minced green onions (scallions)", "1/2 c. dry red wine", "1/4 c. soy sauce", "3 tbsp. salad oil", "3 teaspoon sesame seeds", "2 teaspoon packed brown sugar", "1/4 teaspoon grnd black pepper", "1/4 teaspoon grnd ginger", "1 clove garlic, chopped"]'
+ '["1 tablespoon rosemary", "1 teaspoon thyme", "3 bay leaves", "1 teaspoon smoked paprika", "1 teaspoon pepper", "1/4 cup red wine", "3 cups chicken broth", "2 cups button mushrooms sliced", "2 cups mushroom mix, oyster, shiitake, baby bella, sliced", "2 medium carrots sliced diagonally", "1 onion medium, chopped", "1 red potato medium, cut in 1-inch pieces", "1 cup frozen green beans 1-inch pieces", "1/2 can black olives pitted ripe, halved", "1 handful grape tomatoes halved", "8 chicken thighs with bones and skin. 2-3 lbs", "2 stalks celery", "3 cups water"]'
+ '["3 to 4 carrots", "1 1/2 Tbsp. butter", "1/3 c. brown sugar", "grated lemon rind and juice"]'
+ '["4.5 Cups Flour", "1.5 Tsp Salt", "Pinch Baking Powder", "1 Tbls Sugar", "1 2/3 cup Crisco", "1 egg lightly beaten", "1 tsp vinegar", "Ice Water"]'
+ '["2 c. crushed small thin pretzels (sticks)", "3/4 c. margarine"]']
+
+--- directions ---
+Unique count: 222525
+Sample values: ['["Remove tenderloin from steak.", "Score meat.", "Combine remaining ingredients and pour over meat.", "Let marinate 24 hrs.", "Preheat grill.", "Broil or possibly grill.", "Slice thinly on an angle against the grain."]'
+ '["combine all ingredients in slow cooker (6 quarts). bury chicken in vegetables. don\'t put herbs directly on chicken (because skin is removed later)", "add enough broth and water to cover most of ingredients. liquid level rises a good amount during cooking, so careful with filling the slow cooker too much.", "turn slow cooker on low for 6-7 hours or high 3-4 hours. Note: in my newer Crock-Pot this was enough time, but in my parents\' older Crock-Pot 7 hours on low was not enough (don\'t know how long would be good. we left the veggies a little tough).", "pull out all chicken.", "skim off fat from top with spoon", "pull off skin and remove bones from chicken. shred and return to soup."]'
+ '["Cook 3 to 4 carrots; cut crosswise in 1-inch pieces.", "Add butter, brown sugar (packed) and grated lemon rind and juice to taste.", "Heat slow, stirring occasionally, until nicely glazed, about 15 minutes.", "Makes 2 to 3 servings."]'
+ '["Mix all dry ingredients in a bowl.", "", "Add crisco and cut in with dough cutter.", "", "Mix wet ingredients adding ice water to make 1 total cup of wet ingredients.", "", "Add wet to dry, starting with 1/2 cup of wet ingredients.", "", "Make dough and chill"]'
+ '["Mix and press in baking pan, approximately 13 x 9-inch. Bake 8 minutes at 400\\u00b0. Cool."]']
+
+--- link ---
+Unique count: 223114
+Sample values: ['cookeatshare.com/recipes/marinated-flank-steak-20757'
+ 'www.yummly.com/recipe/French-Chicken-Stew-1433580'
+ 'www.cookbooks.com/Recipe-Details.aspx?id=1011892'
+ 'www.epicurious.com/recipes/member/views/moms-pie-dough-50099408'
+ 'www.cookbooks.com/Recipe-Details.aspx?id=106723']
+
+--- source ---
+Unique count: 2
+Sample values: ['Recipes1M' 'Gathered']
+
+--- NER ---
+Unique count: 220574
+Sample values: ['["flank steak", "green onions", "red wine", "soy sauce", "salad oil", "sesame seeds", "brown sugar", "grnd black pepper", "grnd ginger", "clove garlic"]'
+ '["rosemary", "thyme", "bay leaves", "paprika", "pepper", "red wine", "chicken broth", "button mushrooms", "mushroom mix", "carrots", "onion", "frozen green beans", "black olives", "handful grape tomatoes", "chicken", "stalks celery", "water"]'
+ '["carrots", "butter", "brown sugar", "lemon rind"]'
+ '["Flour", "Salt", "Baking Powder", "Sugar", "Crisco", "egg", "vinegar", "Water"]'
+ '["thin pretzels", "margarine"]']
+
+=== Average Lengths (for text columns) ===
+title: mean length = 23.90
+ingredients: mean length = 259.01
+directions: mean length = 505.08
+NER: mean length = 111.77
+
+=== NER Sample ===
+["chicken", "process cheese", "onion", "mayonna...
+["margarine", "brown sugar", "sugar", "eggs", "...
+["onion", "sugar", "vegetable oil", "cider vine...
+["flour", "salt", "marjoram leaves", "onion", "...
+["macaroni", "peas", "garlic salt", "tuna", "on...
