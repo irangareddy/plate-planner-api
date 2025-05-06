@@ -1,6 +1,5 @@
 import random
 from ast import literal_eval
-
 import pandas as pd
 from ranx import Qrels, Run, evaluate
 from utils.recipesuggestionmodel import metadata_df, suggest_recipes
@@ -42,6 +41,7 @@ def build_qrels_and_run(queries):
         run[qid] = {r["title"]: r["combined_score"] for r in results}
     return Qrels(qrels), Run(run)
 
+# --- Evaluation runner per ingredient count
 def evaluate_with_fixed_query_size(n_queries=10, num_ingredients=2):
     print(f"\n🔍 Testing with {num_ingredients} ingredient(s)...")
     test_queries = generate_test_queries(metadata_df, n=n_queries, min_ing=num_ingredients, max_ing=num_ingredients)
@@ -52,13 +52,10 @@ def evaluate_with_fixed_query_size(n_queries=10, num_ingredients=2):
     df = pd.DataFrame([results])
     print(df.to_string(index=False))
 
-
+# --- Main entry point
 def main():
     evaluate_with_fixed_query_size(n_queries=10, num_ingredients=2)
     evaluate_with_fixed_query_size(n_queries=10, num_ingredients=3)
 
-
 if __name__ == "__main__":
     main()
-
-
