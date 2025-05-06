@@ -1,29 +1,56 @@
-# 01_load_clean_parse.py
-
 import pandas as pd
 import ast
 import os
+import re
+import yaml
+import wordninja
 
-# Paths
-RAW_DATA_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/raw/recipe_dataset_200k.csv'          # <-- adjust this to your file
+# --- Paths ---
+RAW_DATA_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/raw/recipe_dataset_200k.csv'
 CLEANED_DATA_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/cleaned_ner.csv'
+NORMALIZER_YAML_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/ml_training/normalizer_config.yaml'  # <-- Adjust if needed
 
-# Step 1: Load dataset
-print("Loading dataset...")
+# --- Load YAML config ---
+with open(NORMALIZER_YAML_PATH, "r") as f:
+    config = yaml.safe_load(f)
+
+DESCRIPTORS = set(config.get("descriptors", []))
+UNITS = set(config.get("units", []))
+STOPWORDS = set(config.get("stopwords", []))
+BLACKLIST = set(config.get("blacklist", []))
+
+# --- Normalizer ---
+def normalize_ingredient(text, fallback=True):
+    text = text.lower()
+    text = re.sub(r'[^a-z\\s]', '', text)
+
+    split_tokens = []
+    for word in text.split():
+        split_tokens.extend(wordninja.split(word))
+
+    filtered = [
+        t for t in split_tokens
+        if t not in DESCRIPTORS and t not in UNITS and t not in STOPWORDS and t not in BLACKLIST and len(t) > 2
+    ]
+
+    if not filtered and fallback:
+        return split_tokens[-1] if split_tokens else text
+
+    return " ".join(filtered)
+
+# --- Load Dataset ---
+print("📥 Loading dataset...")
 df = pd.read_csv(RAW_DATA_PATH)
 
-# Step 2: Parse NER column into list
-print("Parsing NER column...")
+print("🔍 Parsing NER column...")
 df['ner_list'] = df['NER'].apply(ast.literal_eval)
 
-# Step 3: Clean ingredients (lowercase + strip spaces)
-print("Cleaning ingredients...")
-df['ner_list_cleaned'] = df['ner_list'].apply(lambda lst: [x.lower().strip() for x in lst])
+print("🧼 Normalizing ingredients using YAML-driven config...")
+df['ner_list_cleaned'] = df['ner_list'].apply(lambda lst: [normalize_ingredient(x) for x in lst])
 
-# Step 4: Save to processed folder
-print(f"Saving cleaned data to {CLEANED_DATA_PATH}...")
+# --- Save Cleaned Output ---
+print(f"💾 Saving cleaned data to {CLEANED_DATA_PATH}...")
 os.makedirs(os.path.dirname(CLEANED_DATA_PATH), exist_ok=True)
-# We need to convert lists to strings to save in CSV
 df[['title', 'ner_list_cleaned', 'directions']].to_csv(CLEANED_DATA_PATH, index=False)
 
-print("✅ Done! Saved cleaned dataset as CSV.")
+print("✅ Done! Normalized dataset saved.")

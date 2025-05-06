@@ -5,13 +5,12 @@ import os
 from tqdm import tqdm
 
 # ------------------ Config ------------------
-CSV_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/substitution_edges_colab_20250505_085919.csv'  # 🔁 Change this
+CSV_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/substitution_edges_with_context_cleaned.csv'  # 🔁 Change this
 NEO4J_URI = "bolt://localhost:7687"
 NEO4J_USER = "neo4j"
 NEO4J_PASSWORD = "12345678"
 BATCH_SIZE = 1000
 MIN_SCORE = 0.90
-NOISE = {"level", "spray", "kellogg"}
 
 # ------------------ Neo4j Driver ------------------
 load_dotenv()
@@ -24,6 +23,7 @@ def batch_insert(tx, rows):
         MATCH (b:Ingredient {name: row.target})
         MERGE (a)-[r:SUBSTITUTES_WITH]->(b)
         SET r.score = row.score
+        SET r.context = row.context
     """, batch=rows)
 
 # ------------------ Main ------------------
@@ -34,7 +34,6 @@ def main():
     # Filter low scores and noisy terms
     print("🧹 Filtering poor or noisy substitutions...")
     df = df[df['score'] >= MIN_SCORE]
-    df = df[~df['target'].isin(NOISE)]
 
     print(f"✅ {len(df)} edges remaining after filtering")
 

@@ -1,121 +1,111 @@
-import os
-import ast
+# 03_build_context_vectors.py (Enhanced)
 import pandas as pd
+import ast
 import numpy as np
+import os
 from tqdm import tqdm
-from dotenv import load_dotenv
-from neo4j import GraphDatabase
 from gensim.models import Word2Vec
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
-import re
-import time
 
-# ------------------ Paths ------------------
+from data.processed.substitution_config import SubstitutionConfig
+
+# ----------------- Paths -----------------
 CLEANED_ACTIONS_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/cleaned_ner_actions.csv'
-INGREDIENT_W2V_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/ingredient_w2v.model'
-ACTION_W2V_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/action_w2v.model'
+INGREDIENT_W2V_MODEL_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/ingredient_w2v.model'
+ACTION_W2V_MODEL_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/action_w2v.model'
+CONTEXT_VECTOR_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/context_vectors.npy'
+CONTEXT_META_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/context_metadata.csv'
 
-# ------------------ Neo4j Setup ------------------
-load_dotenv()
-NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
-NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
-NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "12345678")
-driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
+# ----------------- Parameters -----------------
+ING_WEIGHT = SubstitutionConfig.INGREDIENT_WEIGHT
+ACT_WEIGHT = SubstitutionConfig.ACTION_WEIGHT
 
-# ------------------ Parameters ------------------
-TOP_K = 5
-SIM_THRESHOLD = 0.85
-ING_WEIGHT = 0.9
-ACT_WEIGHT = 0.1
-BATCH_SIZE = 100  # Number of substitutions to commit at once
 
-# ------------------ Load Data + Models ------------------
-print("📦 Loading dataset and models...")
-df = pd.read_csv(CLEANED_ACTIONS_PATH)
-df['ner_list_cleaned'] = df['ner_list_cleaned'].apply(ast.literal_eval)
-df['actions'] = df['actions'].apply(ast.literal_eval)
+# ----------------- Helper Functions -----------------
+def safe_literal_eval(x):
+    """Safely parse string representations of lists"""
+    try:
+        return ast.literal_eval(x)
+    except (ValueError, SyntaxError):
+        return []
 
-ingredient_model = Word2Vec.load(INGREDIENT_W2V_PATH)
-action_model = Word2Vec.load(ACTION_W2V_PATH)
 
-# ------------------ Utility ------------------
-def is_valid_token(token):
-    return (
-        token.isalpha()
-        and len(token) > 2
-        and token.lower() not in ENGLISH_STOP_WORDS
-        and not re.fullmatch(r"[a-z]", token.lower())
-    )
+def create_directory(path):
+    """Ensure output directory exists"""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
 
-def build_vector(ingredients, actions):
-    ing_vecs = [ingredient_model.wv[w] for w in ingredients if w in ingredient_model.wv]
-    act_vecs = [action_model.wv[w] for w in actions if w in action_model.wv]
 
-    ing_vec = np.mean(ing_vecs, axis=0) if ing_vecs else np.zeros(ingredient_model.vector_size)
-    act_vec = np.mean(act_vecs, axis=0) if act_vecs else np.zeros(action_model.vector_size)
-
-    return np.concatenate([ing_vec * ING_WEIGHT, act_vec * ACT_WEIGHT])
-
-def write_batch_to_neo4j(tx, records):
-    tx.run("""
-        UNWIND $rows AS row
-        MATCH (a:Ingredient {name: row.source})
-        MATCH (b:Ingredient {name: row.target})
-        MERGE (a)-[r:SUBSTITUTES_WITH]->(b)
-        SET r.score = row.score
-    """, rows=records)
-
-# ------------------ Main Logic ------------------
+# ----------------- Main Pipeline -----------------
 def main():
-    print("🔍 Generating context-aware substitutions...\n")
-    start = time.time()
-    batch = []
+    # --- Step 1: Load and Prepare Data ---
+    print("📦 Loading dataset...")
+    df = pd.read_csv(CLEANED_ACTIONS_PATH)
 
-    with driver.session() as session:
-        for _, row in tqdm(df.iterrows(), total=len(df)):
-            ingredients = [w for w in row['ner_list_cleaned'] if is_valid_token(w)]
-            actions = [w for w in row['actions'] if is_valid_token(w)]
+    print("🔍 Parsing list columns...")
+    tqdm.pandas()
+    df['ner_list_cleaned'] = df['ner_list_cleaned'].progress_apply(safe_literal_eval)
+    df['actions'] = df['actions'].progress_apply(safe_literal_eval)
 
-            if len(ingredients) < 2:
-                continue
+    # --- Step 2: Train Models ---
+    print("🧠 Training Ingredient Word2Vec...")
+    ingredient_model = Word2Vec(
+        sentences=df['ner_list_cleaned'].tolist(),
+        vector_size=100,
+        window=5,
+        min_count=2,
+        workers=4,
+        sg=1
+    )
+    create_directory(INGREDIENT_W2V_MODEL_PATH)
+    ingredient_model.save(INGREDIENT_W2V_MODEL_PATH)
 
-            original_vec = build_vector(ingredients, actions)
+    print("🧠 Training Action Word2Vec...")
+    action_model = Word2Vec(
+        sentences=df['actions'].tolist(),
+        vector_size=50,
+        window=3,
+        min_count=1,
+        workers=4,
+        sg=1
+    )
+    create_directory(ACTION_W2V_MODEL_PATH)
+    action_model.save(ACTION_W2V_MODEL_PATH)
 
-            for ing in ingredients:
-                if ing not in ingredient_model.wv:
-                    continue
+    # --- Step 3: Build Context Vectors ---
+    def build_context_vector(ingredients, actions):
+        """Create weighted context vector with error handling"""
+        try:
+            ing_vecs = [ingredient_model.wv[w] for w in ingredients if w in ingredient_model.wv]
+            act_vecs = [action_model.wv[w] for w in actions if w in action_model.wv]
 
-                try:
-                    similar_candidates = ingredient_model.wv.most_similar(ing, topn=TOP_K)
-                except KeyError:
-                    continue
+            if not ing_vecs and not act_vecs:
+                return np.zeros(ingredient_model.vector_size + action_model.vector_size)
 
-                for candidate, _ in similar_candidates:
-                    if candidate == ing or not is_valid_token(candidate):
-                        continue
+            ing_vec = np.mean(ing_vecs, axis=0) * ING_WEIGHT if ing_vecs else np.zeros(ingredient_model.vector_size)
+            act_vec = np.mean(act_vecs, axis=0) * ACT_WEIGHT if act_vecs else np.zeros(action_model.vector_size)
 
-                    substituted = [candidate if x == ing else x for x in ingredients]
-                    sub_vec = build_vector(substituted, actions)
-                    similarity = cosine_similarity([original_vec], [sub_vec])[0][0]
+            return np.concatenate([ing_vec, act_vec])
 
-                    if similarity >= SIM_THRESHOLD:
-                        batch.append({
-                            "source": ing,
-                            "target": candidate,
-                            "score": round(similarity, 4)
-                        })
+        except Exception as e:
+            print(f"Error building vector: {e}")
+            return np.zeros(ingredient_model.vector_size + action_model.vector_size)
 
-                    if len(batch) >= BATCH_SIZE:
-                        session.execute_write(write_batch_to_neo4j, batch)
-                        batch.clear()
+    print("⚙️ Building context vectors...")
+    context_vectors = df.progress_apply(
+        lambda row: build_context_vector(row['ner_list_cleaned'], row['actions']),
+        axis=1
+    )
+    context_matrix = np.vstack(context_vectors)
 
-        # Final batch
-        if batch:
-            session.execute_write(write_batch_to_neo4j, batch)
+    # --- Step 4: Save Output ---
+    print("💾 Saving outputs...")
+    create_directory(CONTEXT_VECTOR_PATH)
+    np.save(CONTEXT_VECTOR_PATH, context_matrix)
 
-    print(f"\n✅ Done! All substitutions written to Neo4j.")
-    print(f"⏱️ Total time taken: {round(time.time() - start, 2)} seconds")
+    create_directory(CONTEXT_META_PATH)
+    df[['title']].to_csv(CONTEXT_META_PATH, index=False)
+
+    print("✅ Done! Context vectors + metadata ready for FAISS/similarity search.")
+
 
 if __name__ == "__main__":
     main()

@@ -50,28 +50,28 @@ queries = {
 
     "Top SIMILAR_TO Edges": """
         MATCH (a:Ingredient)-[r:SIMILAR_TO]->(b:Ingredient)
-        RETURN a.name AS source, b.name AS target, r.score
+        RETURN a.name AS source, b.name AS target, r.score, r.context
         ORDER BY r.score DESC
         LIMIT 10
     """,
 
     "SIMILAR_TO Neighbors of Butter": """
         MATCH (a:Ingredient {name: 'butter'})-[r:SIMILAR_TO]->(b:Ingredient)
-        RETURN b.name AS substitute, r.score
+        RETURN b.name AS substitute, r.score, r.context
         ORDER BY r.score DESC
         LIMIT 10
     """,
 
     "Top SUBSTITUTES_WITH Edges": """
         MATCH (a:Ingredient)-[r:SUBSTITUTES_WITH]->(b:Ingredient)
-        RETURN a.name AS source, b.name AS substitute, r.score
+        RETURN a.name AS source, b.name AS substitute, r.score, r.context
         ORDER BY r.score DESC
         LIMIT 10
     """,
 
     "SUBSTITUTES_WITH Neighbors of Butter": """
         MATCH (a:Ingredient {name: 'butter'})-[r:SUBSTITUTES_WITH]->(b:Ingredient)
-        RETURN b.name AS substitute, r.score
+        RETURN b.name AS substitute, r.score, r.context
         ORDER BY r.score DESC
         LIMIT 10
     """,

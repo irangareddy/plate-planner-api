@@ -3,7 +3,7 @@ import numpy as np
 
 # 1. Data Loading with Error Handling
 try:
-    df = pd.read_csv('/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/substitution_edges_colab_20250505_085919.csv')
+    df = pd.read_csv('/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/substitution_edges_with_context_cleaned.csv')
     print("Dataset loaded successfully!\n")
 
     metrics = []
@@ -51,22 +51,31 @@ try:
     else:
         metrics.append("\nNo 'score' column found in dataset.")
 
-    # 7. Correlation Matrix (if more than one numeric column)
+    # 7. Context-Aware Substitution Analysis
+    if 'context' in df.columns:
+        metrics.append("\n=== CONTEXT-AWARE SUBSTITUTION STATS ===")
+        metrics.append(f"Context values (unique): {df['context'].nunique()}")
+        context_counts = df['context'].value_counts().head(10)
+        metrics.append("\nTop 10 Contexts by Frequency:\n" + context_counts.to_string())
+
+        # Score distribution per context
+        metrics.append("\nContext-Based Score Breakdown:")
+        grouped = df.groupby('context')['score'].agg(['count', 'mean', 'std', 'min', 'max']).sort_values('count', ascending=False)
+        metrics.append(grouped.to_string())
+
+    # 8. Correlation Matrix (if more than one numeric column)
     num_cols = df.select_dtypes(include=[np.number]).columns
     if len(num_cols) > 1:
         metrics.append("\n=== NUMERIC CORRELATION MATRIX ===")
         metrics.append(df[num_cols].corr().to_string())
 
-    # 8. Save Metrics
-    with open('../data/dataset_understanding.txt', 'w') as f:
+    # 9. Save Metrics
+    with open('/Users/rangareddy/Development/OSS/plate-planner-api/src/data/results/dataset_understanding.txt', 'w') as f:
         f.write("\n".join(metrics))
 
-    print("Metrics saved to dataset_understanding.txt")
+    print("✅ Metrics saved to dataset_understanding.txt")
 
 except FileNotFoundError:
-    print("Error: File not found. Please verify:")
-    print("- File exists in current directory")
-    print("- Correct filename")
-    print("- File is not open in other programs")
+    print("❌ Error: File not found. Please check your path.")
 except Exception as e:
-    print(f"Unexpected error: {str(e)}")
+    print(f"❌ Unexpected error: {str(e)}")

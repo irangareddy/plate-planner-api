@@ -2,7 +2,7 @@
 from neo4j import GraphDatabase
 from datetime import datetime
 
-from ml_training.ingredient_normalizer import normalize_ingredient_v2
+from ml_training.ingredient_normalizer import normalize_ingredient
 
 # --- Configuration ---
 NEO4J_URI = "bolt://localhost:7687"
@@ -28,7 +28,7 @@ def generate_report(ingredients):
     report.append(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
 
     for name in ingredients:
-        normalized, score = normalize_ingredient_v2(name, return_score=True)
+        normalized, score = normalize_ingredient(name, return_score=True)
         if normalized != name:
             mapping_status = f"✅ Normalized to: {normalized} [{score}]"
         else:

@@ -1,19 +1,51 @@
-from fastapi import FastAPI
-from src.services.neo4j_service import find_substitutes, find_recipes_from_pantry
+from fastapi import FastAPI, Query
+
+from src.ml_training.recipesuggestionmodel import suggest_recipes
+from src.services.neo4j_service import get_hybrid_substitutes
 from src.models.request_response_models import SubstituteRequest, PantryRequest
 
+from fastapi import FastAPI
+from pydantic import BaseModel
+from typing import List
+
 app = FastAPI(title="Plate Planner Backend", version="0.1")
+
+# ✅ Request schema for recipe suggestion
+class RecipeRequest(BaseModel):
+    ingredients: List[str]
+    top_n: int = 5
+    rerank_weight: float = 0.6
+
+
 
 @app.get("/")
 def root():
     return {"message": "Plate Planner API is running."}
 
-@app.post("/substitute_ingredient")
-def substitute_ingredient(request: SubstituteRequest):
-    results = find_substitutes(request.ingredient, request.top_k)
-    return {"substitutes": results}
 
-@app.post("/find_recipes_from_pantry")
-def find_recipes(request: PantryRequest):
-    results = find_recipes_from_pantry(request.pantry, request.top_k)
-    return {"recipes": results}
+@app.post("/suggest_recipes")
+def suggest_recipes_endpoint(request: RecipeRequest):
+    results = suggest_recipes(
+        ingredients=request.ingredients,
+        top_n=request.top_n,
+        rerank_weight=request.rerank_weight
+    )
+    return {
+        "input_ingredients": request.ingredients,
+        "top_n": request.top_n,
+        "results": results
+    }
+
+@app.get("/substitute")
+def substitute(
+    ingredient: str,
+    context: str = None,
+    hybrid: bool = False  # 👈 now toggleable from query param
+):
+    substitutes = get_hybrid_substitutes(ingredient, context, use_hybrid=hybrid)
+    return {
+        "ingredient": ingredient,
+        "context": context or "fallback",
+        "hybrid": hybrid,
+        "substitutes": substitutes
+    }
