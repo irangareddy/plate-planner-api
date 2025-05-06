@@ -14,9 +14,9 @@ from functools import partial
 from datetime import datetime
 
 # ------------------ Config ------------------
-CLEANED_ACTIONS_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/cleaned_ner_actions.csv'
-INGREDIENT_W2V_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/ingredient_w2v.model'
-ACTION_W2V_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/action_w2v.model'
+CLEANED_ACTIONS_PATH = '/data/processed/ingredient_substitution/cleaned_ner_actions.csv'
+INGREDIENT_W2V_PATH = '/data/models/ingredient_substitution/ingredient_w2v.model'
+ACTION_W2V_PATH = '/data/models/ingredient_substitution/action_w2v.model'
 EXPORT_PATH = f"/mnt/data/substitution_edges_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
 
 TOP_K = 5

@@ -3,44 +3,55 @@ import pandas as pd
 import faiss
 import os
 from sklearn.preprocessing import normalize
+from tqdm import tqdm
 
 # ----------------- Paths -----------------
-CONTEXT_VECTORS_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/context_vectors.npy'
-CONTEXT_METADATA_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/context_metadata.csv'
-FAISS_INDEX_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/faiss_context.index'
+CONTEXT_VECTORS_PATH = '/data/processed/ingredient_substitution/context_vectors.npy'
+CONTEXT_METADATA_PATH = '/data/processed/ingredient_substitution/context_metadata.csv'
+FAISS_INDEX_PATH = '/data/models/ingredient_substitution/faiss_context.index'
 
-# ----------------- Step 1: Load Context Vectors -----------------
-print("🔄 Loading context vectors...")
-context_vectors = np.load(CONTEXT_VECTORS_PATH)
 
-print("🧼 Normalizing context vectors (L2)...")
-context_vectors = normalize(context_vectors, axis=1)
+# ----------------- Main Logic -----------------
+def build_faiss_index():
+    # Load data
+    context_vectors = np.load(CONTEXT_VECTORS_PATH)
+    metadata = pd.read_csv(CONTEXT_METADATA_PATH)
 
-print("📋 Loading metadata...")
-metadata = pd.read_csv(CONTEXT_METADATA_PATH)
+    # Data validation
+    assert len(metadata) == context_vectors.shape[0], \
+        f"Metadata rows ({len(metadata)}) ≠ vectors ({context_vectors.shape[0]})"
 
-# ----------------- Step 2: Build FAISS Index -----------------
-d = context_vectors.shape[1]  # dimension of context vectors
-print(f"⚙️ Building FAISS index with vector dimension {d}...")
+    # Normalization
+    context_vectors = normalize(context_vectors, axis=1, norm='l2')
 
-index = faiss.IndexFlatL2(d)
-index.add(context_vectors)
+    # Index setup
+    d = context_vectors.shape[1]
 
-print(f"📦 Total vectors indexed: {index.ntotal}")
+    if faiss.get_num_gpus() > 0:
+        res = faiss.StandardGpuResources()
+        index = faiss.index_cpu_to_gpu(res, 0, faiss.IndexFlatL2(d))
+    else:
+        index = faiss.IndexIVFFlat(faiss.IndexFlatL2(d), d, 100)
+        index.train(context_vectors)  # Only for IVF indices
 
-# ----------------- Step 3: Save FAISS Index -----------------
-os.makedirs(os.path.dirname(FAISS_INDEX_PATH), exist_ok=True)
-faiss.write_index(index, FAISS_INDEX_PATH)
+    # Batch add for large datasets
+    batch_size = 10000
+    for i in tqdm(range(0, len(context_vectors), batch_size),
+                  desc="Indexing batches"):
+        index.add(context_vectors[i:i + batch_size])
 
-print(f"✅ FAISS index saved at: {FAISS_INDEX_PATH}")
+    # Save
+    os.makedirs(os.path.dirname(FAISS_INDEX_PATH), exist_ok=True)
+    faiss.write_index(index, FAISS_INDEX_PATH)
 
-# ----------------- Step 4: Quick Search Test -----------------
-print("🔍 Running a quick nearest neighbor search on first vector...")
+    # Verification
+    test_vector = context_vectors[0].reshape(1, -1)
+    D, I = index.search(test_vector, 5)
+    assert len(I[0]) == 5, "Index search failed basic test"
 
-D, I = index.search(context_vectors[:1], k=5)
+    return index
 
-print("🏆 Most similar recipes to the first recipe:")
-for idx in I[0]:
-    print(f"• {metadata.iloc[idx]['title']}")
 
-print("✅ FAISS substitution system ready.")
+if __name__ == "__main__":
+    index = build_faiss_index()
+    print(f"✅ FAISS index built with {index.ntotal} vectors")

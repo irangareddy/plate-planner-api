@@ -6,8 +6,8 @@ import argparse
 import re
 
 # ----------------- Paths -----------------
-INGREDIENT_W2V_MODEL_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/ingredient_w2v.model'
-ACTION_W2V_MODEL_PATH = '/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/action_w2v.model'
+INGREDIENT_W2V_MODEL_PATH = '/data/models/ingredient_substitution/ingredient_w2v.model'
+ACTION_W2V_MODEL_PATH = '/data/models/ingredient_substitution/action_w2v.model'
 
 # ----------------- Parameters -----------------
 ING_WEIGHT = 0.8

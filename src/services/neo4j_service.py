@@ -1,31 +1,31 @@
-from neo4j import GraphDatabase
+from src.ml_training.hybrid_substitution import (
+    get_hybrid_subs,
+    get_direct_subs,
+    get_cooccurrence_subs
+)
 from src.config.config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD
+from neo4j import GraphDatabase
+from src.ml_training.ingredient_normalizer import normalize_ingredient
 
 driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
 
-def find_substitutes(ingredient_name: str, top_k: int = 5):
-    query = """
-        MATCH (a:Ingredient {name: $name})-[r:SIMILAR_TO]->(b:Ingredient)
-        RETURN b.name AS substitute, r.score AS similarity
-        ORDER BY r.score DESC
-        LIMIT $top_k;
-    """
-    with driver.session() as session:
-        results = session.execute_read(lambda tx: tx.run(query, name=ingredient_name, top_k=top_k).data())
-    return results
+def get_hybrid_substitutes(
+    ingredient: str,
+    context: str | None = None,
+    top_k: int = 5,
+    alpha: float = 0.9,
+    use_hybrid: bool = True
+):
+    norm_ing = normalize_ingredient(ingredient)
 
-def find_recipes_from_pantry(pantry: list, top_k: int = 10):
-    query = """
-        WITH $pantry AS pantry
-        MATCH (i:Ingredient)
-        WHERE i.name IN pantry
-        MATCH (i)-[:SIMILAR_TO*0..1]->(sub:Ingredient)
-        MATCH (r:Recipe)-[:HAS_INGREDIENT]->(sub)
-        WITH r, collect(DISTINCT sub.name) AS matched_ingredients
-        ORDER BY size(matched_ingredients) DESC
-        RETURN r.title AS recipe, matched_ingredients
-        LIMIT $top_k;
-    """
     with driver.session() as session:
-        results = session.execute_read(lambda tx: tx.run(query, pantry=pantry, top_k=top_k).data())
-    return results
+        if use_hybrid:
+            return session.execute_read(get_hybrid_subs, norm_ing, context, top_k, alpha)
+        else:
+            return session.execute_read(_direct_only, norm_ing, context, top_k)
+
+# Helper: direct-only fallback
+def _direct_only(tx, ingredient, context=None, top_k=5):
+    direct, _ = get_direct_subs(tx, ingredient, context, top_k)
+    return sorted(direct, key=lambda x: -x["score"])[:top_k]
+
