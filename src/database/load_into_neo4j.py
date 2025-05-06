@@ -1,20 +1,14 @@
-import os
 
 import pandas as pd
-from dotenv import load_dotenv
+from config.config import NEO4J_PASSWORD, NEO4J_URI, NEO4J_USER
+from config.paths import DataPaths
 from neo4j import GraphDatabase
 from tqdm import tqdm
 
-# Load environment variables
-load_dotenv()
-
-NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
-NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
-NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "12345678")
-
-INGREDIENTS_PATH = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/ingredients.csv"
-RECIPES_PATH = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/recipes.csv"
-RELATIONS_PATH = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/recipe_ingredients.csv"
+paths = DataPaths()
+INGREDIENTS_PATH = paths.ingredients
+RECIPES_PATH = paths.recipes
+RELATIONS_PATH = paths.recipe_ingredients
 
 BATCH_SIZE = 500
 
@@ -43,10 +37,22 @@ def batch(iterable, size):
     for idx in range(0, l, size):
         yield iterable[idx:min(idx + size, l)]
 
+
+
+def node_exists(tx, label: str) -> bool:
+    query = f"MATCH (n:{label}) RETURN count(n) > 0 AS exists"
+    result = tx.run(query)
+    return result.single()["exists"]
+
+
 def main():
     driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
     try:
         with driver.session() as session:
+            if session.execute_read(node_exists, "Ingredient"):
+                print("⚠️ Ingredients already exist in Neo4j. Skipping initial load.")
+                return
+
             print("Creating indexes...")
             session.execute_write(create_indexes)
 

@@ -1,14 +1,16 @@
 
 import pandas as pd
+from config.config import NEO4J_PASSWORD, NEO4J_URI, NEO4J_USER
+
+# ------------------ Config ------------------
+from config.paths import DataPaths
 from dotenv import load_dotenv
 from neo4j import GraphDatabase
 from tqdm import tqdm
 
-# ------------------ Config ------------------
-CSV_PATH = "/data/processed/ingredient_substitution/substitution_edges_with_context_cleaned.csv"  # 🔁 Change this
-NEO4J_URI = "bolt://localhost:7687"
-NEO4J_USER = "neo4j"
-NEO4J_PASSWORD = "12345678"
+paths = DataPaths()
+CSV_PATH = paths.substitution_edges_with_context_cleaned
+
 BATCH_SIZE = 1000
 MIN_SCORE = 0.90
 

@@ -9,12 +9,12 @@ from tqdm import tqdm
 
 tqdm.pandas()
 
-RAW_DATA_PATH = "/Users/rangareddy/Development/Projects/plate-planner-api/src/data/raw/recipe_dataset.csv"
-CLEANED_INGREDIENTS_PATH = "/Users/rangareddy/Development/Projects/plate-planner-api/src/data/processed/ingredients.csv"
-CLEANED_RECIPES_PATH = "/Users/rangareddy/Development/Projects/plate-planner-api/src/data/processed/recipes.csv"
-CLEANED_RELATIONS_PATH = "/Users/rangareddy/Development/Projects/plate-planner-api/src/data/processed/recipe_ingredients.csv"
+RAW_DATA_PATH = "/Users/rangareddy/Development/Projects/plate-planner-api/app/src/data/raw/recipe_dataset.csv"
+CLEANED_INGREDIENTS_PATH = "/Users/rangareddy/Development/Projects/plate-planner-api/app/src/data/processed/ingredients.csv"
+CLEANED_RECIPES_PATH = "/Users/rangareddy/Development/Projects/plate-planner-api/app/src/data/processed/recipes.csv"
+CLEANED_RELATIONS_PATH = "/Users/rangareddy/Development/Projects/plate-planner-api/app/src/data/processed/recipe_ingredients.csv"
 
-os.makedirs("/Users/rangareddy/Development/Projects/plate-planner-api/src/data/processed", exist_ok=True)
+os.makedirs("/Users/rangareddy/Development/Projects/plate-planner-api/app/src/data/processed", exist_ok=True)
 
 # Utility: Clean single ingredient
 def clean_ingredient(name):

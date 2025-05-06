@@ -3,29 +3,33 @@ from ast import literal_eval
 import faiss
 import numpy as np
 import pandas as pd
+from config.paths import DataPaths  # 👈 centralized path handling
 from sentence_transformers import SentenceTransformer
 
+# -------------------------
+# Constants
+# -------------------------
 faiss.omp_set_num_threads(1)
 
-# -------------------------
-# Constants (adjust paths)
-# -------------------------
 MODEL_NAME = "all-MiniLM-L6-v2"
-RECIPE_METADATA_PATH = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/recipe_suggestion/recipe_metadata.csv"
-EMBEDDINGS_PATH = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/processed/recipe_suggestion/recipe_embeddings.npy"
-FAISS_INDEX_PATH = "/Users/rangareddy/Development/OSS/plate-planner-api/src/data/models/recipe_suggestion/recipe_index.faiss"
+paths = DataPaths()
+
+RECIPE_METADATA_PATH = paths.recipe_metadata
+EMBEDDINGS_PATH = paths.recipe_embeddings
+FAISS_INDEX_PATH = paths.recipe_faiss_index
 
 # -------------------------
 # Load model + index once
 # -------------------------
 print("🔄 Loading model, metadata, and FAISS index...")
+
 model = SentenceTransformer(MODEL_NAME)
 metadata_df = pd.read_csv(RECIPE_METADATA_PATH)
 
 recipe_embeddings = np.load(EMBEDDINGS_PATH).astype("float32")
 faiss.normalize_L2(recipe_embeddings)
 
-index = faiss.read_index(FAISS_INDEX_PATH)
+index = faiss.read_index(str(FAISS_INDEX_PATH))
 
 print(f"✅ Loaded: {len(metadata_df)} recipes, FAISS index with {index.ntotal} vectors.")
 
@@ -39,21 +43,7 @@ def suggest_recipes(
     raw_k: int = 50,
     min_overlap: int = 2
 ):
-    """Suggest recipes based on semantic similarity + ingredient overlap.
-
-    Args:
-    ----
-        ingredients (List[str]): User input ingredients.
-        top_n (int): Number of results to return.
-        rerank_weight (float): Importance of overlap vs. semantic score.
-        raw_k (int): FAISS candidate pool size.
-        min_overlap (int): Minimum overlapping ingredients to include.
-
-    Returns:
-    -------
-        List[Dict]: Ranked recipes with scores and metadata.
-
-    """
+    """Suggest recipes based on semantic similarity + ingredient overlap."""
     query_vec = model.encode([" ".join(ingredients)])
     faiss.normalize_L2(query_vec)
     distances, indices = index.search(query_vec, raw_k)

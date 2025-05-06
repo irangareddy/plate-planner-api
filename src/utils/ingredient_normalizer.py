@@ -5,7 +5,7 @@ import wordninja
 import yaml
 
 # Load YAML configuration for normalization
-with open("/Users/rangareddy/Development/OSS/plate-planner-api/src/ml_training/normalizer_config.yaml") as f:
+with open("src/ml_training/normalizer_config.yaml") as f:
     config = yaml.safe_load(f)
 
 DESCRIPTORS = set(config.get("descriptors", []))

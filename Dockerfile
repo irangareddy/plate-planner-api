@@ -39,7 +39,7 @@ FROM python:3.11-slim
 
 # Set environment for Poetry, module resolution, and site-packages
 ENV POETRY_HOME="/opt/poetry"
-ENV PATH="/usr/local/bin:$PATH"
+ENV PATH="/opt/poetry/bin:/usr/local/bin:$PATH"
 ENV PYTHONPATH="/app/src:/usr/local/lib/python3.11/site-packages"
 ENV POETRY_VIRTUALENVS_CREATE=false
 
@@ -65,4 +65,4 @@ WORKDIR /app
 EXPOSE 8000
 
 # Wait for Neo4j, then serve FastAPI app directly (no poetry run needed)
-CMD /bin/sh -c "sleep 5 && until nc -z neo4j 7687; do echo '⏳ Waiting for Neo4j...'; sleep 2; done && echo '✅ Neo4j is up!' && task serve"
+CMD /bin/sh -c "sleep 5 && until nc -z neo4j 7687; do echo '⏳ Waiting for Neo4j...'; sleep 2; done && echo '✅ Neo4j is up!' && task neo4j:bootstrap && task serve"
